@@ -1,0 +1,394 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E6748425247260A300379698 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6748424247260A300379698 /* AppDelegate.swift */; };
+		E6748427247260A300379698 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6748426247260A300379698 /* ViewController.swift */; };
+		E6748429247260A500379698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6748428247260A500379698 /* Assets.xcassets */; };
+		E674842C247260A500379698 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E674842A247260A500379698 /* Main.storyboard */; };
+		E6748437247260C500379698 /* KSAudioResample.c in Sources */ = {isa = PBXBuildFile; fileRef = E6748436247260C500379698 /* KSAudioResample.c */; };
+		E67484412472615F00379698 /* libswscale.5.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E67484392472615F00379698 /* libswscale.5.5.100.dylib */; };
+		E67484422472615F00379698 /* libpostproc.55.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843A2472615F00379698 /* libpostproc.55.5.100.dylib */; };
+		E67484432472615F00379698 /* libavdevice.58.8.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843B2472615F00379698 /* libavdevice.58.8.100.dylib */; };
+		E67484442472615F00379698 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843C2472615F00379698 /* libavformat.58.29.100.dylib */; };
+		E67484452472615F00379698 /* libavcodec.58.54.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843D2472615F00379698 /* libavcodec.58.54.100.dylib */; };
+		E67484462472615F00379698 /* libswresample.3.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843E2472615F00379698 /* libswresample.3.5.100.dylib */; };
+		E67484472472615F00379698 /* libavfilter.7.57.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843F2472615F00379698 /* libavfilter.7.57.100.dylib */; };
+		E67484482472615F00379698 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E67484402472615F00379698 /* libavutil.56.31.100.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E6748421247260A300379698 /* KSAudioResample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSAudioResample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6748424247260A300379698 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E6748426247260A300379698 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E6748428247260A500379698 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E674842B247260A500379698 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E674842D247260A500379698 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E674842E247260A500379698 /* KSAudioResample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KSAudioResample.entitlements; sourceTree = "<group>"; };
+		E6748434247260C500379698 /* KSAudioResample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KSAudioResample-Bridging-Header.h"; sourceTree = "<group>"; };
+		E6748435247260C500379698 /* KSAudioResample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSAudioResample.h; sourceTree = "<group>"; };
+		E6748436247260C500379698 /* KSAudioResample.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = KSAudioResample.c; sourceTree = "<group>"; };
+		E67484392472615F00379698 /* libswscale.5.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswscale.5.5.100.dylib; sourceTree = "<group>"; };
+		E674843A2472615F00379698 /* libpostproc.55.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpostproc.55.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libpostproc.55.5.100.dylib; sourceTree = "<group>"; };
+		E674843B2472615F00379698 /* libavdevice.58.8.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.58.8.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavdevice.58.8.100.dylib; sourceTree = "<group>"; };
+		E674843C2472615F00379698 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
+		E674843D2472615F00379698 /* libavcodec.58.54.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.54.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavcodec.58.54.100.dylib; sourceTree = "<group>"; };
+		E674843E2472615F00379698 /* libswresample.3.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswresample.3.5.100.dylib; sourceTree = "<group>"; };
+		E674843F2472615F00379698 /* libavfilter.7.57.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavfilter.7.57.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavfilter.7.57.100.dylib; sourceTree = "<group>"; };
+		E67484402472615F00379698 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E674841E247260A300379698 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E67484412472615F00379698 /* libswscale.5.5.100.dylib in Frameworks */,
+				E67484422472615F00379698 /* libpostproc.55.5.100.dylib in Frameworks */,
+				E67484432472615F00379698 /* libavdevice.58.8.100.dylib in Frameworks */,
+				E67484442472615F00379698 /* libavformat.58.29.100.dylib in Frameworks */,
+				E67484452472615F00379698 /* libavcodec.58.54.100.dylib in Frameworks */,
+				E67484462472615F00379698 /* libswresample.3.5.100.dylib in Frameworks */,
+				E67484472472615F00379698 /* libavfilter.7.57.100.dylib in Frameworks */,
+				E67484482472615F00379698 /* libavutil.56.31.100.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E6748418247260A300379698 = {
+			isa = PBXGroup;
+			children = (
+				E6748423247260A300379698 /* KSAudioResample */,
+				E6748422247260A300379698 /* Products */,
+				E67484382472615F00379698 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E6748422247260A300379698 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E6748421247260A300379698 /* KSAudioResample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6748423247260A300379698 /* KSAudioResample */ = {
+			isa = PBXGroup;
+			children = (
+				E6748424247260A300379698 /* AppDelegate.swift */,
+				E6748426247260A300379698 /* ViewController.swift */,
+				E6748435247260C500379698 /* KSAudioResample.h */,
+				E6748436247260C500379698 /* KSAudioResample.c */,
+				E6748428247260A500379698 /* Assets.xcassets */,
+				E674842A247260A500379698 /* Main.storyboard */,
+				E674842D247260A500379698 /* Info.plist */,
+				E674842E247260A500379698 /* KSAudioResample.entitlements */,
+				E6748434247260C500379698 /* KSAudioResample-Bridging-Header.h */,
+			);
+			path = KSAudioResample;
+			sourceTree = "<group>";
+		};
+		E67484382472615F00379698 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E674843D2472615F00379698 /* libavcodec.58.54.100.dylib */,
+				E674843B2472615F00379698 /* libavdevice.58.8.100.dylib */,
+				E674843F2472615F00379698 /* libavfilter.7.57.100.dylib */,
+				E674843C2472615F00379698 /* libavformat.58.29.100.dylib */,
+				E67484402472615F00379698 /* libavutil.56.31.100.dylib */,
+				E674843A2472615F00379698 /* libpostproc.55.5.100.dylib */,
+				E674843E2472615F00379698 /* libswresample.3.5.100.dylib */,
+				E67484392472615F00379698 /* libswscale.5.5.100.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E6748420247260A300379698 /* KSAudioResample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6748431247260A500379698 /* Build configuration list for PBXNativeTarget "KSAudioResample" */;
+			buildPhases = (
+				E674841D247260A300379698 /* Sources */,
+				E674841E247260A300379698 /* Frameworks */,
+				E674841F247260A300379698 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KSAudioResample;
+			productName = KSAudioResample;
+			productReference = E6748421247260A300379698 /* KSAudioResample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E6748419247260A300379698 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = saeipi;
+				TargetAttributes = {
+					E6748420247260A300379698 = {
+						CreatedOnToolsVersion = 11.0;
+						LastSwiftMigration = 1100;
+					};
+				};
+			};
+			buildConfigurationList = E674841C247260A300379698 /* Build configuration list for PBXProject "KSAudioResample" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E6748418247260A300379698;
+			productRefGroup = E6748422247260A300379698 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E6748420247260A300379698 /* KSAudioResample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E674841F247260A300379698 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6748429247260A500379698 /* Assets.xcassets in Resources */,
+				E674842C247260A500379698 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E674841D247260A300379698 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6748437247260C500379698 /* KSAudioResample.c in Sources */,
+				E6748427247260A300379698 /* ViewController.swift in Sources */,
+				E6748425247260A300379698 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E674842A247260A500379698 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E674842B247260A500379698 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E674842F247260A500379698 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E6748430247260A500379698 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E6748432247260A500379698 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KSAudioResample/KSAudioResample.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TW8WRSRZ44;
+				INFOPLIST_FILE = KSAudioResample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/ffmpeg/lib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.AudioResample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KSAudioResample/KSAudioResample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+			};
+			name = Debug;
+		};
+		E6748433247260A500379698 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KSAudioResample/KSAudioResample.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TW8WRSRZ44;
+				INFOPLIST_FILE = KSAudioResample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/ffmpeg/lib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.AudioResample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KSAudioResample/KSAudioResample-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E674841C247260A300379698 /* Build configuration list for PBXProject "KSAudioResample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E674842F247260A500379698 /* Debug */,
+				E6748430247260A500379698 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6748431247260A500379698 /* Build configuration list for PBXNativeTarget "KSAudioResample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6748432247260A500379698 /* Debug */,
+				E6748433247260A500379698 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E6748419247260A300379698 /* Project object */;
+}
