@@ -1,0 +1,394 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E6C0E0ED24737E6300FDCF00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C0E0EC24737E6300FDCF00 /* AppDelegate.swift */; };
+		E6C0E0EF24737E6300FDCF00 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C0E0EE24737E6300FDCF00 /* ViewController.swift */; };
+		E6C0E0F124737E6400FDCF00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6C0E0F024737E6400FDCF00 /* Assets.xcassets */; };
+		E6C0E0F424737E6400FDCF00 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6C0E0F224737E6400FDCF00 /* Main.storyboard */; };
+		E6C0E0FF24737F1C00FDCF00 /* ks_encode_video.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C0E0FE24737F1C00FDCF00 /* ks_encode_video.c */; };
+		E6C0E10924737F8200FDCF00 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10124737F8200FDCF00 /* libavformat.58.29.100.dylib */; };
+		E6C0E10A24737F8200FDCF00 /* libavfilter.7.57.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10224737F8200FDCF00 /* libavfilter.7.57.100.dylib */; };
+		E6C0E10B24737F8200FDCF00 /* libpostproc.55.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10324737F8200FDCF00 /* libpostproc.55.5.100.dylib */; };
+		E6C0E10C24737F8200FDCF00 /* libavdevice.58.8.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10424737F8200FDCF00 /* libavdevice.58.8.100.dylib */; };
+		E6C0E10D24737F8200FDCF00 /* libswresample.3.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10524737F8200FDCF00 /* libswresample.3.5.100.dylib */; };
+		E6C0E10E24737F8200FDCF00 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10624737F8200FDCF00 /* libavutil.56.31.100.dylib */; };
+		E6C0E10F24737F8200FDCF00 /* libavcodec.58.54.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10724737F8200FDCF00 /* libavcodec.58.54.100.dylib */; };
+		E6C0E11024737F8200FDCF00 /* libswscale.5.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C0E10824737F8200FDCF00 /* libswscale.5.5.100.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E6C0E0E924737E6300FDCF00 /* KSEncodeVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSEncodeVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6C0E0EC24737E6300FDCF00 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E6C0E0EE24737E6300FDCF00 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E6C0E0F024737E6400FDCF00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E6C0E0F324737E6400FDCF00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E6C0E0F524737E6400FDCF00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6C0E0F624737E6400FDCF00 /* KSEncodeVideo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KSEncodeVideo.entitlements; sourceTree = "<group>"; };
+		E6C0E0FC24737F1C00FDCF00 /* KSEncodeVideo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KSEncodeVideo-Bridging-Header.h"; sourceTree = "<group>"; };
+		E6C0E0FD24737F1C00FDCF00 /* ks_encode_video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ks_encode_video.h; sourceTree = "<group>"; };
+		E6C0E0FE24737F1C00FDCF00 /* ks_encode_video.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ks_encode_video.c; sourceTree = "<group>"; };
+		E6C0E10124737F8200FDCF00 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
+		E6C0E10224737F8200FDCF00 /* libavfilter.7.57.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavfilter.7.57.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavfilter.7.57.100.dylib; sourceTree = "<group>"; };
+		E6C0E10324737F8200FDCF00 /* libpostproc.55.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpostproc.55.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libpostproc.55.5.100.dylib; sourceTree = "<group>"; };
+		E6C0E10424737F8200FDCF00 /* libavdevice.58.8.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.58.8.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavdevice.58.8.100.dylib; sourceTree = "<group>"; };
+		E6C0E10524737F8200FDCF00 /* libswresample.3.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswresample.3.5.100.dylib; sourceTree = "<group>"; };
+		E6C0E10624737F8200FDCF00 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
+		E6C0E10724737F8200FDCF00 /* libavcodec.58.54.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.54.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavcodec.58.54.100.dylib; sourceTree = "<group>"; };
+		E6C0E10824737F8200FDCF00 /* libswscale.5.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswscale.5.5.100.dylib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E6C0E0E624737E6300FDCF00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6C0E10924737F8200FDCF00 /* libavformat.58.29.100.dylib in Frameworks */,
+				E6C0E10A24737F8200FDCF00 /* libavfilter.7.57.100.dylib in Frameworks */,
+				E6C0E10B24737F8200FDCF00 /* libpostproc.55.5.100.dylib in Frameworks */,
+				E6C0E10C24737F8200FDCF00 /* libavdevice.58.8.100.dylib in Frameworks */,
+				E6C0E10D24737F8200FDCF00 /* libswresample.3.5.100.dylib in Frameworks */,
+				E6C0E10E24737F8200FDCF00 /* libavutil.56.31.100.dylib in Frameworks */,
+				E6C0E10F24737F8200FDCF00 /* libavcodec.58.54.100.dylib in Frameworks */,
+				E6C0E11024737F8200FDCF00 /* libswscale.5.5.100.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E6C0E0E024737E6300FDCF00 = {
+			isa = PBXGroup;
+			children = (
+				E6C0E0EB24737E6300FDCF00 /* KSEncodeVideo */,
+				E6C0E0EA24737E6300FDCF00 /* Products */,
+				E6C0E10024737F8200FDCF00 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E6C0E0EA24737E6300FDCF00 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E6C0E0E924737E6300FDCF00 /* KSEncodeVideo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6C0E0EB24737E6300FDCF00 /* KSEncodeVideo */ = {
+			isa = PBXGroup;
+			children = (
+				E6C0E0EC24737E6300FDCF00 /* AppDelegate.swift */,
+				E6C0E0EE24737E6300FDCF00 /* ViewController.swift */,
+				E6C0E0F024737E6400FDCF00 /* Assets.xcassets */,
+				E6C0E0F224737E6400FDCF00 /* Main.storyboard */,
+				E6C0E0F524737E6400FDCF00 /* Info.plist */,
+				E6C0E0F624737E6400FDCF00 /* KSEncodeVideo.entitlements */,
+				E6C0E0FD24737F1C00FDCF00 /* ks_encode_video.h */,
+				E6C0E0FE24737F1C00FDCF00 /* ks_encode_video.c */,
+				E6C0E0FC24737F1C00FDCF00 /* KSEncodeVideo-Bridging-Header.h */,
+			);
+			path = KSEncodeVideo;
+			sourceTree = "<group>";
+		};
+		E6C0E10024737F8200FDCF00 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E6C0E10724737F8200FDCF00 /* libavcodec.58.54.100.dylib */,
+				E6C0E10424737F8200FDCF00 /* libavdevice.58.8.100.dylib */,
+				E6C0E10224737F8200FDCF00 /* libavfilter.7.57.100.dylib */,
+				E6C0E10124737F8200FDCF00 /* libavformat.58.29.100.dylib */,
+				E6C0E10624737F8200FDCF00 /* libavutil.56.31.100.dylib */,
+				E6C0E10324737F8200FDCF00 /* libpostproc.55.5.100.dylib */,
+				E6C0E10524737F8200FDCF00 /* libswresample.3.5.100.dylib */,
+				E6C0E10824737F8200FDCF00 /* libswscale.5.5.100.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E6C0E0E824737E6300FDCF00 /* KSEncodeVideo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6C0E0F924737E6400FDCF00 /* Build configuration list for PBXNativeTarget "KSEncodeVideo" */;
+			buildPhases = (
+				E6C0E0E524737E6300FDCF00 /* Sources */,
+				E6C0E0E624737E6300FDCF00 /* Frameworks */,
+				E6C0E0E724737E6300FDCF00 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KSEncodeVideo;
+			productName = KSEncodeVideo;
+			productReference = E6C0E0E924737E6300FDCF00 /* KSEncodeVideo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E6C0E0E124737E6300FDCF00 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = saeipi;
+				TargetAttributes = {
+					E6C0E0E824737E6300FDCF00 = {
+						CreatedOnToolsVersion = 11.0;
+						LastSwiftMigration = 1100;
+					};
+				};
+			};
+			buildConfigurationList = E6C0E0E424737E6300FDCF00 /* Build configuration list for PBXProject "KSEncodeVideo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E6C0E0E024737E6300FDCF00;
+			productRefGroup = E6C0E0EA24737E6300FDCF00 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E6C0E0E824737E6300FDCF00 /* KSEncodeVideo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E6C0E0E724737E6300FDCF00 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6C0E0F124737E6400FDCF00 /* Assets.xcassets in Resources */,
+				E6C0E0F424737E6400FDCF00 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E6C0E0E524737E6300FDCF00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6C0E0EF24737E6300FDCF00 /* ViewController.swift in Sources */,
+				E6C0E0ED24737E6300FDCF00 /* AppDelegate.swift in Sources */,
+				E6C0E0FF24737F1C00FDCF00 /* ks_encode_video.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E6C0E0F224737E6400FDCF00 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6C0E0F324737E6400FDCF00 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E6C0E0F724737E6400FDCF00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E6C0E0F824737E6400FDCF00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E6C0E0FA24737E6400FDCF00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KSEncodeVideo/KSEncodeVideo.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TW8WRSRZ44;
+				INFOPLIST_FILE = KSEncodeVideo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/ffmpeg/lib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.KSEncodeVideo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KSEncodeVideo/KSEncodeVideo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+			};
+			name = Debug;
+		};
+		E6C0E0FB24737E6400FDCF00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KSEncodeVideo/KSEncodeVideo.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TW8WRSRZ44;
+				INFOPLIST_FILE = KSEncodeVideo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/ffmpeg/lib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.KSEncodeVideo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KSEncodeVideo/KSEncodeVideo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E6C0E0E424737E6300FDCF00 /* Build configuration list for PBXProject "KSEncodeVideo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6C0E0F724737E6400FDCF00 /* Debug */,
+				E6C0E0F824737E6400FDCF00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6C0E0F924737E6400FDCF00 /* Build configuration list for PBXNativeTarget "KSEncodeVideo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6C0E0FA24737E6400FDCF00 /* Debug */,
+				E6C0E0FB24737E6400FDCF00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E6C0E0E124737E6300FDCF00 /* Project object */;
+}
