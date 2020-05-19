@@ -1,13 +1,13 @@
 //
-//  KSAudioResample.h
-//  KSAudioResample
+//  KSEncodeAAC.h
+//  KSEncodeAAC
 //
 //  Created by saeipi on 2020/5/18.
 //  Copyright © 2020 saeipi. All rights reserved.
 //
 
-#ifndef KSAudioResample_h
-#define KSAudioResample_h
+#ifndef KSEncodeAAC_h
+#define KSEncodeAAC_h
 
 #include <stdio.h>
 #include "libavutil/avutil.h"
@@ -21,4 +21,4 @@ void update_status(int status);
 /* 音频采样 */
 void record_audio(void);
 
-#endif /* KSAudioResample_h */
+#endif /* KSEncodeAAC_h */

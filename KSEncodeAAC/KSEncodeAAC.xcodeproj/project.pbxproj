@@ -1,0 +1,392 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E67484592472846800379698 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67484582472846800379698 /* AppDelegate.swift */; };
+		E674845B2472846800379698 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E674845A2472846800379698 /* ViewController.swift */; };
+		E674845D2472846900379698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E674845C2472846900379698 /* Assets.xcassets */; };
+		E67484602472846900379698 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E674845E2472846900379698 /* Main.storyboard */; };
+		E67484712472852700379698 /* libswscale.5.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E67484692472852700379698 /* libswscale.5.5.100.dylib */; };
+		E67484722472852700379698 /* libpostproc.55.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674846A2472852700379698 /* libpostproc.55.5.100.dylib */; };
+		E67484732472852700379698 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674846B2472852700379698 /* libavformat.58.29.100.dylib */; };
+		E67484742472852700379698 /* libavdevice.58.8.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674846C2472852700379698 /* libavdevice.58.8.100.dylib */; };
+		E67484752472852700379698 /* libavfilter.7.57.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674846D2472852700379698 /* libavfilter.7.57.100.dylib */; };
+		E67484762472852700379698 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674846E2472852700379698 /* libavutil.56.31.100.dylib */; };
+		E67484772472852700379698 /* libswresample.3.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674846F2472852700379698 /* libswresample.3.5.100.dylib */; };
+		E67484782472852700379698 /* libavcodec.58.54.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E67484702472852700379698 /* libavcodec.58.54.100.dylib */; };
+		E674847C247285AF00379698 /* KSEncodeAAC.c in Sources */ = {isa = PBXBuildFile; fileRef = E674847B247285AF00379698 /* KSEncodeAAC.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E67484552472846800379698 /* KSEncodeAAC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSEncodeAAC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E67484582472846800379698 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E674845A2472846800379698 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E674845C2472846900379698 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E674845F2472846900379698 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E67484612472846900379698 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E67484622472846900379698 /* KSEncodeAAC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KSEncodeAAC.entitlements; sourceTree = "<group>"; };
+		E67484692472852700379698 /* libswscale.5.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswscale.5.5.100.dylib; sourceTree = "<group>"; };
+		E674846A2472852700379698 /* libpostproc.55.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpostproc.55.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libpostproc.55.5.100.dylib; sourceTree = "<group>"; };
+		E674846B2472852700379698 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
+		E674846C2472852700379698 /* libavdevice.58.8.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.58.8.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavdevice.58.8.100.dylib; sourceTree = "<group>"; };
+		E674846D2472852700379698 /* libavfilter.7.57.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavfilter.7.57.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavfilter.7.57.100.dylib; sourceTree = "<group>"; };
+		E674846E2472852700379698 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
+		E674846F2472852700379698 /* libswresample.3.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswresample.3.5.100.dylib; sourceTree = "<group>"; };
+		E67484702472852700379698 /* libavcodec.58.54.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.54.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavcodec.58.54.100.dylib; sourceTree = "<group>"; };
+		E6748479247285AE00379698 /* KSEncodeAAC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KSEncodeAAC-Bridging-Header.h"; sourceTree = "<group>"; };
+		E674847A247285AF00379698 /* KSEncodeAAC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSEncodeAAC.h; sourceTree = "<group>"; };
+		E674847B247285AF00379698 /* KSEncodeAAC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = KSEncodeAAC.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E67484522472846800379698 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E67484712472852700379698 /* libswscale.5.5.100.dylib in Frameworks */,
+				E67484722472852700379698 /* libpostproc.55.5.100.dylib in Frameworks */,
+				E67484732472852700379698 /* libavformat.58.29.100.dylib in Frameworks */,
+				E67484742472852700379698 /* libavdevice.58.8.100.dylib in Frameworks */,
+				E67484752472852700379698 /* libavfilter.7.57.100.dylib in Frameworks */,
+				E67484762472852700379698 /* libavutil.56.31.100.dylib in Frameworks */,
+				E67484772472852700379698 /* libswresample.3.5.100.dylib in Frameworks */,
+				E67484782472852700379698 /* libavcodec.58.54.100.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E674844C2472846800379698 = {
+			isa = PBXGroup;
+			children = (
+				E67484572472846800379698 /* KSEncodeAAC */,
+				E67484562472846800379698 /* Products */,
+				E67484682472852700379698 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E67484562472846800379698 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E67484552472846800379698 /* KSEncodeAAC.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E67484572472846800379698 /* KSEncodeAAC */ = {
+			isa = PBXGroup;
+			children = (
+				E67484582472846800379698 /* AppDelegate.swift */,
+				E674845A2472846800379698 /* ViewController.swift */,
+				E674845C2472846900379698 /* Assets.xcassets */,
+				E674845E2472846900379698 /* Main.storyboard */,
+				E67484612472846900379698 /* Info.plist */,
+				E67484622472846900379698 /* KSEncodeAAC.entitlements */,
+				E674847A247285AF00379698 /* KSEncodeAAC.h */,
+				E674847B247285AF00379698 /* KSEncodeAAC.c */,
+				E6748479247285AE00379698 /* KSEncodeAAC-Bridging-Header.h */,
+			);
+			path = KSEncodeAAC;
+			sourceTree = "<group>";
+		};
+		E67484682472852700379698 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E67484702472852700379698 /* libavcodec.58.54.100.dylib */,
+				E674846C2472852700379698 /* libavdevice.58.8.100.dylib */,
+				E674846D2472852700379698 /* libavfilter.7.57.100.dylib */,
+				E674846B2472852700379698 /* libavformat.58.29.100.dylib */,
+				E674846E2472852700379698 /* libavutil.56.31.100.dylib */,
+				E674846A2472852700379698 /* libpostproc.55.5.100.dylib */,
+				E674846F2472852700379698 /* libswresample.3.5.100.dylib */,
+				E67484692472852700379698 /* libswscale.5.5.100.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E67484542472846800379698 /* KSEncodeAAC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E67484652472846900379698 /* Build configuration list for PBXNativeTarget "KSEncodeAAC" */;
+			buildPhases = (
+				E67484512472846800379698 /* Sources */,
+				E67484522472846800379698 /* Frameworks */,
+				E67484532472846800379698 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KSEncodeAAC;
+			productName = KSEncodeAAC;
+			productReference = E67484552472846800379698 /* KSEncodeAAC.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E674844D2472846800379698 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = saeipi;
+				TargetAttributes = {
+					E67484542472846800379698 = {
+						CreatedOnToolsVersion = 11.0;
+						LastSwiftMigration = 1100;
+					};
+				};
+			};
+			buildConfigurationList = E67484502472846800379698 /* Build configuration list for PBXProject "KSEncodeAAC" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E674844C2472846800379698;
+			productRefGroup = E67484562472846800379698 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E67484542472846800379698 /* KSEncodeAAC */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E67484532472846800379698 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E674845D2472846900379698 /* Assets.xcassets in Resources */,
+				E67484602472846900379698 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E67484512472846800379698 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E674845B2472846800379698 /* ViewController.swift in Sources */,
+				E67484592472846800379698 /* AppDelegate.swift in Sources */,
+				E674847C247285AF00379698 /* KSEncodeAAC.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E674845E2472846900379698 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E674845F2472846900379698 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E67484632472846900379698 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E67484642472846900379698 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E67484662472846900379698 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KSEncodeAAC/KSEncodeAAC.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = KSEncodeAAC/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/ffmpeg/lib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.KSEncodeAAC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KSEncodeAAC/KSEncodeAAC-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+			};
+			name = Debug;
+		};
+		E67484672472846900379698 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KSEncodeAAC/KSEncodeAAC.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = KSEncodeAAC/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/ffmpeg/lib,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.KSEncodeAAC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KSEncodeAAC/KSEncodeAAC-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E67484502472846800379698 /* Build configuration list for PBXProject "KSEncodeAAC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E67484632472846900379698 /* Debug */,
+				E67484642472846900379698 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E67484652472846900379698 /* Build configuration list for PBXNativeTarget "KSEncodeAAC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E67484662472846900379698 /* Debug */,
+				E67484672472846900379698 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E674844D2472846800379698 /* Project object */;
+}
