@@ -28,7 +28,7 @@ static void encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *out
             return;
         }else if (ret < 0) {
             printf("Error, encoding audio frame\n");
-            exit(-1);
+            return;
         }
         fwrite(pkt->data, 1, pkt->size, output);
         /* 冲洗流中的信息 */
