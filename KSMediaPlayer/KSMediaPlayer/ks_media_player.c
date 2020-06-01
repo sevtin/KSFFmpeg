@@ -886,20 +886,35 @@ int stream_component_open(VideoState *is, int stream_index) {
             //uint8_t *out_buffer=(uint8_t *)av_malloc(MAX_AUDIO_FRAME_SIZE*2);
             int64_t in_channel_layout=av_get_default_channel_layout(is->audio_ctx->channels);
             
+            
+            struct SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,// we're allocating a new context
+                                                                      out_channel_layout,// out_ch_layout
+                                                                      AV_SAMPLE_FMT_S16,// out_sample_fmt
+                                                                      out_sample_rate,// out_sample_rate
+                                                                      in_channel_layout,// in_ch_layout
+                                                                      is->audio_ctx->sample_fmt,// in_sample_fmt
+                                                                      is->audio_ctx->sample_rate,// in_sample_rate
+                                                                      0,// log_offset
+                                                                      NULL);// log_ctx
+
+            /* 原版
             struct SwrContext *audio_convert_ctx;
             audio_convert_ctx = swr_alloc();
-            swr_alloc_set_opts(audio_convert_ctx,
-                               out_channel_layout,
-                               AV_SAMPLE_FMT_S16,
-                               out_sample_rate,
-                               in_channel_layout,
-                               is->audio_ctx->sample_fmt,
-                               is->audio_ctx->sample_rate,
-                               0,
-                               NULL);
+            swr_alloc_set_opts(audio_convert_ctx,// we're allocating a new context
+                               out_channel_layout,// out_ch_layout
+                               AV_SAMPLE_FMT_S16,// out_sample_fmt
+                               out_sample_rate,// out_sample_rate
+                               in_channel_layout,// in_ch_layout
+                               is->audio_ctx->sample_fmt,// in_sample_fmt
+                               is->audio_ctx->sample_rate,// in_sample_rate
+                               0,// log_offset
+                               NULL);// log_ctx
             fprintf(stderr, "swr opts: out_channel_layout:%lld, out_sample_fmt:%d, out_sample_rate:%d, in_channel_layout:%lld, in_sample_fmt:%d, in_sample_rate:%d",
                     out_channel_layout, AV_SAMPLE_FMT_S16, out_sample_rate, in_channel_layout, is->audio_ctx->sample_fmt, is->audio_ctx->sample_rate);
             swr_init(audio_convert_ctx);
+            */
+            fprintf(stderr, "swr opts: out_channel_layout:%lld, out_sample_fmt:%d, out_sample_rate:%d, in_channel_layout:%lld, in_sample_fmt:%d, in_sample_rate:%d",
+            out_channel_layout, AV_SAMPLE_FMT_S16, out_sample_rate, in_channel_layout, is->audio_ctx->sample_fmt, is->audio_ctx->sample_rate);
             
             is->audio_swr_ctx = audio_convert_ctx;
             
@@ -986,12 +1001,14 @@ int demux_thread(void *arg) {
         goto fail;
     }
     
+ 
     //creat window from SDL
     win = SDL_CreateWindow("Media Player",
                            SDL_WINDOWPOS_UNDEFINED,
                            SDL_WINDOWPOS_UNDEFINED,
                            is->video_ctx->width, is->video_ctx->height,
                            SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+     
     if(!win) {
         fprintf(stderr, "SDL: could not set video mode - exiting\n");
         exit(1);
@@ -1010,9 +1027,8 @@ int demux_thread(void *arg) {
                                 is->video_ctx->width,
                                 is->video_ctx->height);
     
-    
+ 
     // main decode loop
-    
     for(;;) {
         if(is->quit) {
             break;
@@ -1055,8 +1071,38 @@ fail:
     return 0;
 }
 
-int media_player(char *url) {
+/* 创建SDL2 */
+int create_sdl2(int width, int height) {
+    //creat window from SDL
+    win = SDL_CreateWindow("Media Player",
+                           SDL_WINDOWPOS_UNDEFINED,
+                           SDL_WINDOWPOS_UNDEFINED,
+                           width,
+                           height,
+                           SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
     
+    if(!win) {
+        fprintf(stderr, "SDL: could not set video mode - exiting\n");
+        return -1;
+    }
+    
+    renderer = SDL_CreateRenderer(win, -1, 0);
+    
+    //IYUV: Y + U + V  (3 planes)
+    //YV12: Y + V + U  (3 planes)
+    Uint32 pixformat = SDL_PIXELFORMAT_IYUV;
+    
+    //create texture for render
+    texture = SDL_CreateTexture(renderer,
+                                pixformat,
+                                SDL_TEXTUREACCESS_STREAMING,
+                                width,
+                                height);
+    return 0;
+}
+
+int media_player(char *url) {
+
     SDL_Event       event;
     
     VideoState      *is;
@@ -1091,6 +1137,7 @@ int media_player(char *url) {
     
     is->av_sync_type = DEFAULT_AV_SYNC_TYPE;
     is->parse_tid = SDL_CreateThread(demux_thread,"demux_thread", is);
+    
     if(!is->parse_tid) {
         av_free(is);
         return -1;

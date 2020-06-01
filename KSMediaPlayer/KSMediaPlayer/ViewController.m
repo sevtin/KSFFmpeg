@@ -13,11 +13,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    char *url = "/Users/saeipi/Downloads/File/SOPSandwich.mp4";
-    media_player(url);
+    NSButton *playBtn = [NSButton buttonWithTitle:@"播放" target:self action:@selector(mediaPlayer)];
+    [self.view addSubview:playBtn];
+    playBtn.frame = CGRectMake(self.view.frame.size.width / 2 - 50, self.view.frame.size.height / 2 - 30, 100, 60);
     
 }
 
+- (void)mediaPlayer {
+    char *url = "/Users/saeipi/Downloads/File/SOPSandwich.mp4";
+    media_player(url);
+}
 
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];
