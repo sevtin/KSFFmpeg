@@ -198,6 +198,7 @@ int play_video(char *url) {
     while (1) {
         SDL_WaitEvent(&sdl_event);
         if (sdl_event.type == REFRESH_EVENT) {
+            /* 方案1 */
             if (av_read_frame(fmt_ctx, packet) >= 0) {
                 if (packet->stream_index == video_stream_index) {
                     /* 12、解码视频  */
@@ -274,3 +275,38 @@ int play_video(char *url) {
     return 0;
 }
 
+/* 方案2
+ while(av_read_frame(pFormatCtx, &packet)>=0) {
+     // Is this a packet from the video stream?
+     if(packet.stream_index==videoStream) {
+         // Decode video frame
+         avcodec_decode_video2(pCodecCtx, pFrame, &frameFinished, &packet);
+         
+         // Did we get a video frame?
+         if(frameFinished) {
+             
+             // Convert the image into YUV format that SDL uses
+             sws_scale(sws_ctx, (uint8_t const * const *)pFrame->data,
+                       pFrame->linesize, 0, pCodecCtx->height,
+                       pict->data, pict->linesize);
+             
+             SDL_UpdateYUVTexture(texture, NULL,
+                                  pict->data[0], pict->linesize[0],
+                                  pict->data[1], pict->linesize[1],
+                                  pict->data[2], pict->linesize[2]);
+             
+             // Set Size of Window
+             rect.x = 0;
+             rect.y = 0;
+             rect.w = pCodecCtx->width;
+             rect.h = pCodecCtx->height;
+             
+             SDL_RenderClear(renderer);
+             SDL_RenderCopy(renderer, texture, NULL, &rect);
+             SDL_RenderPresent(renderer);
+         }
+     }
+     // Free the packet that was allocated by av_read_frame
+     av_free_packet(&packet);
+ }
+ */
