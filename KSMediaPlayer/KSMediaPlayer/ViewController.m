@@ -12,9 +12,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     char *url = "/Users/saeipi/Downloads/File/Sandwich.mp4";
     media_player(url);
-    // Do any additional setup after loading the view.
     
 }
 

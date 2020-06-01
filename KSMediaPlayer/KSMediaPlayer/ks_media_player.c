@@ -154,18 +154,31 @@ FILE *audiofd = NULL;
 
 /* Since we only have one decoding thread, the Big Struct
  can be global in case we need it. */
+/* 全局视频状态管理 */
 VideoState *global_video_state;
-
+/*
+ memset函数:将某一块内存中的内容全部设置为指定的值， 这个函数通常为新申请的内存做初始化工作。
+ extern void *memset(void *buffer, int c, int count) buffer：为指针或是数组,c：是赋给buffer的值,count：是buffer的长度.
+ */
 /* 队列初始化 */
 void packet_queue_init(PacketQueue *q) {
     memset(q, 0, sizeof(PacketQueue));
     q->mutex = SDL_CreateMutex();
     q->cond = SDL_CreateCond();
 }
-
+/*
+ void *av_malloc(size_t size);
+ 分配一块字节数为 size 的内存区域，默认是从堆上，默认是按字节对齐，字节对齐的大小 和 CPU 有密切方便汇编指令处理。
+ */
 /* 入队列 */
 int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
-    
+    /*
+     av_dup_packet, 通过调用 av_malloc、memcpy、memset等函数， 将shared buffer 的AVPacket duplicate(复制)到独立的buffer中。并且修改AVPacket的析构函数指针av_destruct_pkt。
+     */
+    /*
+     int av_dup_packet(AVPacket *pkt);
+     复制src->data引用的数据缓存，赋值给dst。也就是创建两个独立packet，这个功能现在可用使用函数av_packet_ref来代替
+     */
     AVPacketList *pkt1;
     if(av_dup_packet(pkt) < 0) {
         return -1;
@@ -176,17 +189,35 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     pkt1->pkt = *pkt;
     pkt1->next = NULL;
     
+    /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(q->mutex);
     
+    /*
+     1、如果没有last_pkt：代表没有first_pkt，更新first_pkt
+     2、如果有last_pkt：更新first_pkt->next:AVPacketList
+     */
     if (!q->last_pkt)
         q->first_pkt = pkt1;
     else
         q->last_pkt->next = pkt1;
+    
+    /*
+     更新last_pkt指针
+     */
     q->last_pkt = pkt1;
+    /*
+     更新包数量
+     */
     q->nb_packets++;
+    /*
+     包大小叠加
+     */
     q->size += pkt1->pkt.size;
+    
+    /* SDL_CondSignal:发送通知解阻塞 */
     SDL_CondSignal(q->cond);
     
+    /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(q->mutex);
     return 0;
 }
@@ -196,23 +227,33 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
     AVPacketList *pkt1;
     int ret;
     
+    /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(q->mutex);
     
+    /* 一直循环 */
     for(;;) {
-        
+        /* 是否退出 */
         if(global_video_state->quit) {
             ret = -1;
             break;
         }
-        
+        /* 获取队列第一个包 */
         pkt1 = q->first_pkt;
         if (pkt1) {
+            /* 更新first_pktd指向 */
             q->first_pkt = pkt1->next;
+            /* 如果q->first_pkt == NULL，则更新q->last_pkt */
             if (!q->first_pkt)
                 q->last_pkt = NULL;
+            /* 取packet后，数量更新减1 */
             q->nb_packets--;
+            /* 更新包大小 */
             q->size -= pkt1->pkt.size;
+            
+            /* 通过指针更新外部变量 */
             *pkt = pkt1->pkt;
+            
+            /* 内存释放 */
             av_free(pkt1);
             ret = 1;
             break;
@@ -220,30 +261,42 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
             ret = 0;
             break;
         } else {
+            /* SDL_CondWait :等待(线程阻塞) */
             SDL_CondWait(q->cond, q->mutex);
         }
     }
+    /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(q->mutex);
     return ret;
 }
 
 double get_audio_clock(VideoState *is) {
+    /* 显示时间戳 */
     double pts;
     int hw_buf_size, bytes_per_sec, n;
     
+    /* 音频时钟 */
     pts = is->audio_clock; /* maintained in the audio thread */
+    
+    /* 缓存大小 - index*/
     hw_buf_size = is->audio_buf_size - is->audio_buf_index;
     bytes_per_sec = 0;
     n = is->audio_ctx->channels * 2;
+    
+    /* 判断是否有音频流 */
     if(is->audio_st) {
+        /* is->audio_ctx->sample_rate:采样率 */
         bytes_per_sec = is->audio_ctx->sample_rate * n;
     }
+    
+    /* 计算播放时间 */
     if(bytes_per_sec) {
         pts -= (double)hw_buf_size / bytes_per_sec;
     }
     return pts;
 }
 
+/* 获取视屏时钟*/
 double get_video_clock(VideoState *is) {
     double delta;
     
@@ -251,16 +304,21 @@ double get_video_clock(VideoState *is) {
     return is->video_current_pts + delta;
 }
 
+/* 获取外部时钟 */
 double get_external_clock(VideoState *is) {
     return av_gettime() / 1000000.0;
 }
 
+/* 主时钟 */
 double get_master_clock(VideoState *is) {
     if(is->av_sync_type == AV_SYNC_VIDEO_MASTER) {
+         /* 视屏帧同步方案 */
         return get_video_clock(is);
     } else if(is->av_sync_type == AV_SYNC_AUDIO_MASTER) {
+         /* 音频同步方案 */
         return get_audio_clock(is);
     } else {
+        /* 外部时钟同步方案 */
         return get_external_clock(is);
     }
 }
