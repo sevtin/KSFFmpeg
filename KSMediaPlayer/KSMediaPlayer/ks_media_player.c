@@ -32,6 +32,7 @@
 #define MAX_VIDEOQ_SIZE (5 * 256 * 1024)
 
 #define AV_SYNC_THRESHOLD 0.01
+/* 同步阈值。如果误差太大，则不进行校正，也不丢帧来做同步了 */
 #define AV_NOSYNC_THRESHOLD 10.0
 
 #define SAMPLE_CORRECTION_PERCENT_MAX 10
@@ -331,23 +332,32 @@ int synchronize_audio(VideoState *is, short *samples,
     double ref_clock;
     
     n = 2 * is->audio_ctx->channels;
-    
+    /* 非音频同步方案 */
     if(is->av_sync_type != AV_SYNC_AUDIO_MASTER) {
         double diff, avg_diff;
         int wanted_size, min_size, max_size /*, nb_samples */;
-        
+        /* 获取时钟 */
         ref_clock = get_master_clock(is);
+        /* 音频时钟 - 主时钟*/
         diff = get_audio_clock(is) - ref_clock;
-        
+        /*
+         diff小于0，视频比音频慢，丢帧
+         diff大于0, 视频比音频快，不丢帧
+         */
+        /* 声音时钟和视频时钟的差异在我们的阀值范围内 */
         if(diff < AV_NOSYNC_THRESHOLD) {
             // accumulate the diffs
-            is->audio_diff_cum = diff + is->audio_diff_avg_coef
-            * is->audio_diff_cum;
+            /* 用公式diff_sum=new_diff+diff_sum*c来计算差异 */
+            is->audio_diff_cum = diff + is->audio_diff_avg_coef * is->audio_diff_cum;
+            /* 音频差异平均计数*/
             if(is->audio_diff_avg_count < AUDIO_DIFF_AVG_NB) {
                 is->audio_diff_avg_count++;
             } else {
+                /* 当准备好去找平均差异的时候，我们用简单的计算方式：avg_diff=diff_sum*(1-c)来平均差异 */
                 avg_diff = is->audio_diff_cum * (1.0 - is->audio_diff_avg_coef);
+                /* 音频现在时钟大于视频现在时钟 */
                 if(fabs(avg_diff) >= is->audio_diff_threshold) {
+                    /* 记住audio_length*(sample_rate）*channels*2就是audio_length秒时间的样本数。*/
                     wanted_size = samples_size + ((int)(diff * is->audio_ctx->sample_rate) * n);
                     min_size = samples_size * ((100 - SAMPLE_CORRECTION_PERCENT_MAX) / 100);
                     max_size = samples_size * ((100 + SAMPLE_CORRECTION_PERCENT_MAX) / 100);
@@ -364,7 +374,9 @@ int synchronize_audio(VideoState *is, short *samples,
                         int nb;
                         
                         /* add samples by copying final sample*/
-                        nb = (samples_size - wanted_size);
+                        //nb = (samples_size - wanted_size);原版: 视乎写反了
+                        nb = (wanted_size - samples_size);
+                        
                         samples_end = (uint8_t *)samples + samples_size - n;
                         q = samples_end + n;
                         while(nb > 0) {
@@ -377,6 +389,7 @@ int synchronize_audio(VideoState *is, short *samples,
                 }
             }
         } else {
+            /* 声音时钟和视频时钟的差异大于我们的阀值。失去同步 */
             /* difference is TOO big; reset diff stuff */
             is->audio_diff_avg_count = 0;
             is->audio_diff_cum = 0;
@@ -568,6 +581,7 @@ void video_refresh_timer(void *userdata) {
                  FFPlay still doesn't "know if this is the best guess." */
                 sync_threshold = (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
                 if(fabs(diff) < AV_NOSYNC_THRESHOLD) {
+                    /* vp->pts小于ref_clock,即当前播放视频帧慢 */
                     if(diff <= -sync_threshold) {
                         delay = 0;
                     } else if(diff >= sync_threshold) {
