@@ -433,7 +433,11 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                  1);
                  */
                 data_size = 2 * is->audio_frame.nb_samples * 2;
-                assert(data_size <= buf_size);
+                if (data_size <= buf_size) {
+                    return -1;
+                }
+                /* 断言 */
+                //assert(data_size <= buf_size);
                 
                 /*
                  int swr_convert(struct SwrContext *s, uint8_t **out, int out_count, const uint8_t **in, int in_count);
@@ -882,7 +886,6 @@ int stream_component_open(VideoState *is, int stream_index) {
             //uint8_t *out_buffer=(uint8_t *)av_malloc(MAX_AUDIO_FRAME_SIZE*2);
             int64_t in_channel_layout=av_get_default_channel_layout(is->audio_ctx->channels);
             
-            
             struct SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,// we're allocating a new context
                                                                       out_channel_layout,// out_ch_layout
                                                                       AV_SAMPLE_FMT_S16,// out_sample_fmt
@@ -945,7 +948,7 @@ int demux_thread(void *arg) {
     char errors[1024] = {0,};
     
     VideoState *is = (VideoState *)arg;
-    AVFormatContext *pFormatCtx;
+    AVFormatContext *pFormatCtx = NULL;
     AVPacket pkt1, *packet = &pkt1;
     
     int video_index = -1;
