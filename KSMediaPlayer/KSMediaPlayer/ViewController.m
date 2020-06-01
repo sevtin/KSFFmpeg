@@ -13,7 +13,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    char *url = "/Users/saeipi/Downloads/File/Sandwich.mp4";
+    char *url = "/Users/saeipi/Downloads/File/SOPSandwich.mp4";
     media_player(url);
     
 }

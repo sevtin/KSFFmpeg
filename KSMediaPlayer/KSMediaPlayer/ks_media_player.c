@@ -127,7 +127,9 @@ typedef struct VideoState {
     
     VideoPicture    pictq[VIDEO_PICTURE_QUEUE_SIZE];
     int             pictq_size, pictq_rindex, pictq_windex;
+    /* 互斥结构体 */
     SDL_mutex       *pictq_mutex;
+    /* 条件变量 */
     SDL_cond        *pictq_cond;
     
     /* 解析线程 */
@@ -138,6 +140,7 @@ typedef struct VideoState {
     int             quit;
 } VideoState;
 
+/* 互斥结构体 */
 SDL_mutex    *text_mutex;
 SDL_Window   *win = NULL;
 SDL_Renderer *renderer;
@@ -410,6 +413,13 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
     for(;;) {
         while(is->audio_pkt_size > 0) {
             int got_frame = 0;
+            /*音频解码: int avcodec_decode_audio4(AVCodecContext *avctx, AVFrame *frame, int *got_frame_ptr, const AVPacket *avpkt);
+             *@param avctx 编解码器上下文
+             *@param [out] frame用于存储解码音频样本的AVFrame
+             *@param [out] got_frame_ptr如果没有帧可以解码则为零，否则为非零
+             *@param [in] avpkt包含输入缓冲区的输入AVPacket
+             *@return 如果在解码期间发生错误，则返回否定错误代码，否则返回从输入AVPacket消耗的字节数。
+             */
             len1 = avcodec_decode_audio4(is->audio_ctx, &is->audio_frame, &got_frame, pkt);
             if(len1 < 0) {
                 /* if error, skip frame */
@@ -428,6 +438,14 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 data_size = 2 * is->audio_frame.nb_samples * 2;
                 assert(data_size <= buf_size);
                 
+                /*
+                 int swr_convert(struct SwrContext *s, uint8_t **out, int out_count, const uint8_t **in, int in_count);
+                 参数1：音频重采样的上下文
+                 参数2：输出的指针。传递的输出的数组
+                 参数3：输出的样本数量，不是字节数。单通道的样本数量。
+                 参数4：输入的数组，AVFrame解码出来的DATA
+                 参数5：输入的单通道的样本数量。
+                 */
                 swr_convert(is->audio_swr_ctx,
                             &audio_buf,
                             MAX_AUDIO_FRAME_SIZE*3/2,
@@ -477,17 +495,22 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     int len1, audio_size;
     double pts;
     
+    /* 清空sdl缓存中遗留的数据 */
     SDL_memset(stream, 0, len);
     
     while(len > 0) {
+        /* 下标大于缓存大小 */
         if(is->audio_buf_index >= is->audio_buf_size) {
             /* We have already sent all our data; get more */
+            /* 音频解码 */
             audio_size = audio_decode_frame(is, is->audio_buf, sizeof(is->audio_buf), &pts);
             if(audio_size < 0) {
+                /* 错误 */
                 /* If error, output silence */
                 is->audio_buf_size = 1024 * 2 * 2;
                 memset(is->audio_buf, 0, is->audio_buf_size);
             } else {
+                /* 同步音频 */
                 audio_size = synchronize_audio(is, (int16_t *)is->audio_buf,
                                                audio_size, pts);
                 is->audio_buf_size = audio_size;
@@ -497,6 +520,8 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
         len1 = is->audio_buf_size - is->audio_buf_index;
         if(len1 > len)
             len1 = len;
+        
+        /* 对音频数据进行混音，不要直接用memcpy。否则声音会失真 */
         SDL_MixAudio(stream,(uint8_t *)is->audio_buf + is->audio_buf_index, len1, SDL_MIX_MAXVOLUME);
         //memcpy(stream, (uint8_t *)is->audio_buf + is->audio_buf_index, len1);
         len -= len1;
@@ -505,6 +530,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     }
 }
 
+/* 刷新事件 */
 static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque) {
     SDL_Event event;
     event.type = FF_REFRESH_EVENT;
@@ -514,10 +540,12 @@ static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque) {
 }
 
 /* schedule a video refresh in 'delay' ms */
+/* 延迟刷新 */
 static void schedule_refresh(VideoState *is, int delay) {
     SDL_AddTimer(delay, sdl_refresh_timer_cb, is);
 }
 
+/* SDL 显示YUV数据 */
 void video_display(VideoState *is) {
     
     SDL_Rect rect;
@@ -553,6 +581,7 @@ void video_refresh_timer(void *userdata) {
     VideoPicture *vp;
     double actual_delay, delay, sync_threshold, ref_clock, diff;
     
+    /* 存在视屏流 */
     if(is->video_st) {
         if(is->pictq_size == 0) {
             schedule_refresh(is, 1);
@@ -563,16 +592,19 @@ void video_refresh_timer(void *userdata) {
             
             is->video_current_pts = vp->pts;
             is->video_current_pts_time = av_gettime();
+            /* pts - last_pts */
             delay = vp->pts - is->frame_last_pts; /* the pts from last time */
             if(delay <= 0 || delay >= 1.0) {
                 /* if incorrect delay, use previous one */
                 delay = is->frame_last_delay;
             }
             /* save for next time */
+            /* 保存下一个显示时间 */
             is->frame_last_delay = delay;
             is->frame_last_pts = vp->pts;
             
             /* update delay to sync to audio if not master source */
+            /* 保证我们不会在视频为主时钟的时候也来同步视频 */
             if(is->av_sync_type != AV_SYNC_VIDEO_MASTER) {
                 ref_clock = get_master_clock(is);
                 diff = vp->pts - ref_clock;
@@ -633,14 +665,17 @@ void alloc_picture(void *userdata) {
     }
     
     // Allocate a place to put our YUV image on that screen
+    /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(text_mutex);
     
     vp->bmp = (AVPicture*)malloc(sizeof(AVPicture));
+    /* 为图片的像素分配内存，并为其设置AVPicture字段 */
     ret = avpicture_alloc(vp->bmp, AV_PIX_FMT_YUV420P, is->video_ctx->width, is->video_ctx->height);
     if (ret < 0) {
         fprintf(stderr, "Could not allocate temporary picture: %s\n", av_err2str(ret));
     }
     
+    /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(text_mutex);
     
     vp->width = is->video_ctx->width;
@@ -654,11 +689,14 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
     VideoPicture *vp;
     
     /* wait until we have space for a new pic */
+    /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(is->pictq_mutex);
     while(is->pictq_size >= VIDEO_PICTURE_QUEUE_SIZE &&
           !is->quit) {
+        /* SDL_CondWait :等待(线程阻塞) */
         SDL_CondWait(is->pictq_cond, is->pictq_mutex);
     }
+    /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(is->pictq_mutex);
     
     if(is->quit)
@@ -668,6 +706,7 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
     vp = &is->pictq[is->pictq_windex];
     
     /* allocate or resize the buffer! */
+    /* 分配或调整缓冲区大小 */
     if(!vp->bmp ||
        vp->width != is->video_ctx->width ||
        vp->height != is->video_ctx->height) {
@@ -693,9 +732,10 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
         if(++is->pictq_windex == VIDEO_PICTURE_QUEUE_SIZE) {
             is->pictq_windex = 0;
         }
-        
+        /* SDL_LockMutex :互斥锁(加锁) */
         SDL_LockMutex(is->pictq_mutex);
         is->pictq_size++;
+        /* SDL_UnlockMutex : 互斥锁(解锁) */
         SDL_UnlockMutex(is->pictq_mutex);
     }
     return 0;
@@ -707,19 +747,23 @@ double synchronize_video(VideoState *is, AVFrame *src_frame, double pts) {
     
     if(pts != 0) {
         /* if we have pts, set video clock to it */
+        /* 如果我们有显示时间，就设置视频时钟 */
         is->video_clock = pts;
     } else {
         /* if we aren't given a pts, set it to the clock */
+        /* 如果我们没有获得pts，请将其设置为时钟 */
         pts = is->video_clock;
     }
     /* update the video clock */
     frame_delay = av_q2d(is->video_ctx->time_base);
     /* if we are repeating a frame, adjust clock accordingly */
+    /* 如果要重复一帧，请相应地调整时钟 */
     frame_delay += src_frame->repeat_pict * (frame_delay * 0.5);
     is->video_clock += frame_delay;
     return pts;
 }
 
+/* 解码视屏线程 */
 int decode_video_thread(void *arg) {
     VideoState *is = (VideoState *)arg;
     AVPacket pkt1, *packet = &pkt1;
@@ -739,6 +783,7 @@ int decode_video_thread(void *arg) {
         // Decode video frame
         avcodec_decode_video2(is->video_ctx, pFrame, &frameFinished, packet);
         
+        /* 对解码后的AVFrame使用av_frame_get_best_effort_timestamp可以获取PTS */
         if((pts = av_frame_get_best_effort_timestamp(pFrame)) != AV_NOPTS_VALUE) {
         } else {
             pts = 0;
@@ -747,6 +792,7 @@ int decode_video_thread(void *arg) {
         
         // Did we get a video frame?
         if(frameFinished) {
+            /* 同步视屏 */
             pts = synchronize_video(is, pFrame, pts);
             if(queue_picture(is, pFrame, pts) < 0) {
                 break;
@@ -771,7 +817,7 @@ int stream_component_open(VideoState *is, int stream_index) {
     
     codecCtx = avcodec_alloc_context3(NULL);
     
-    
+    /* 将AVCodecContext的成员复制到AVCodecParameters结构体*/
     int ret = avcodec_parameters_to_context(codecCtx, pFormatCtx->streams[stream_index]->codecpar);
     if (ret < 0)
         return -1;
@@ -1022,8 +1068,8 @@ int media_player(char *url) {
         exit(1);
     }
     
-    yuvfd = fopen("/Users/saeipi/Downloads/File/OPSandwich.yuv", "wb+");
-    audiofd = fopen("testout.pcm", "wb+");
+    yuvfd = fopen("/Users/saeipi/Downloads/File/OPSandwich01.yuv", "wb+");
+    audiofd = fopen("/Users/saeipi/Downloads/File/OPSandwich01.pcm", "wb+");
     // Register all formats and codecs
     av_register_all();
     
@@ -1032,12 +1078,13 @@ int media_player(char *url) {
         exit(1);
     }
     
-    
+    /* 互斥结构体 */
     text_mutex = SDL_CreateMutex();
     
     av_strlcpy(is->filename, url, sizeof(is->filename));
     
     is->pictq_mutex = SDL_CreateMutex();
+    /* 条件变量 */
     is->pictq_cond = SDL_CreateCond();
     
     schedule_refresh(is, 40);
@@ -1048,6 +1095,7 @@ int media_player(char *url) {
         av_free(is);
         return -1;
     }
+    
     for(;;) {
         
         SDL_WaitEvent(&event);
