@@ -12,9 +12,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    char *argv[2];
-    argv[1] = "/Users/saeipi/Downloads/File/Sandwich.mp4";
-    media_player(2, &argv);
+    char *url = "/Users/saeipi/Downloads/File/Sandwich.mp4";
+    media_player(url);
     // Do any additional setup after loading the view.
     
 }

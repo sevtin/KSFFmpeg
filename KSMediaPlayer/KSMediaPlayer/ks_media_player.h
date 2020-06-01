@@ -11,6 +11,6 @@
 
 #include <stdio.h>
 
-int media_player(int argc, char *argv[]);
+int media_player(char *url);
 
 #endif /* ks_media_player_h */
