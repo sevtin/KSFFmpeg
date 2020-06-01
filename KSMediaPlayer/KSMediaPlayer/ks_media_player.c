@@ -153,9 +153,6 @@ enum {
     AV_SYNC_EXTERNAL_MASTER,
 };
 
-FILE *yuvfd = NULL;
-FILE *audiofd = NULL;
-
 /* Since we only have one decoding thread, the Big Struct
  can be global in case we need it. */
 /* 全局视频状态管理 */
@@ -452,8 +449,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                             (const uint8_t **)is->audio_frame.data,
                             is->audio_frame.nb_samples);
                 
-                fwrite(audio_buf, 1, data_size, audiofd);
-                //memcpy(audio_buf, is->audio_frame.data[0], data_size);
+                memcpy(audio_buf, is->audio_frame.data[0], data_size);
             }
             is->audio_pkt_data += len1;
             is->audio_pkt_size -= len1;
@@ -1001,7 +997,6 @@ int demux_thread(void *arg) {
         goto fail;
     }
     
- 
     //creat window from SDL
     win = SDL_CreateWindow("Media Player",
                            SDL_WINDOWPOS_UNDEFINED,
@@ -1104,24 +1099,21 @@ int create_sdl2(int width, int height) {
 int media_player(char *url) {
 
     SDL_Event       event;
-    
     VideoState      *is;
-    
+
     is = av_mallocz(sizeof(VideoState));
     
     if(!url) {
-        fprintf(stderr, "Usage: test <file>\n");
-        exit(1);
+        printf("url is null");
+        return -1;
     }
     
-    yuvfd = fopen("/Users/saeipi/Downloads/File/OPSandwich01.yuv", "wb+");
-    audiofd = fopen("/Users/saeipi/Downloads/File/OPSandwich01.pcm", "wb+");
     // Register all formats and codecs
     av_register_all();
     
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER)) {
         fprintf(stderr, "Could not initialize SDL - %s\n", SDL_GetError());
-        exit(1);
+        return -1;
     }
     
     /* 互斥结构体 */
@@ -1144,7 +1136,6 @@ int media_player(char *url) {
     }
     
     for(;;) {
-        
         SDL_WaitEvent(&event);
         switch(event.type) {
             case FF_QUIT_EVENT:
@@ -1160,9 +1151,5 @@ int media_player(char *url) {
                 break;
         }
     }
-    
-    fclose(yuvfd);
-    fclose(audiofd);
     return 0;
-    
 }

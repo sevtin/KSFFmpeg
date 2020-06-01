@@ -14,8 +14,8 @@
             filePath = "KSMediaPlayer/ks_media_player.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "919"
-            endingLineNumber = "919"
+            startingLineNumber = "915"
+            endingLineNumber = "915"
             landmarkName = "stream_component_open(is, stream_index)"
             landmarkType = "9">
          </BreakpointContent>
