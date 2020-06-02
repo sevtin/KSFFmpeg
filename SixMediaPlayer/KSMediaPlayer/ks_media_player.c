@@ -107,7 +107,7 @@ typedef struct VideoState {
     unsigned int    audio_buf_index;
     //解码后的音频帧
     AVFrame         audio_frame;
-    //解码之前的音频包
+    //解码之前的音频包（可能包含多个视频帧或者音频帧）
     AVPacket        audio_pkt;
     //解码前音频包数据的指针
     uint8_t         *audio_pkt_data;
@@ -608,9 +608,14 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
         vp->pts = pts;
         
         // Convert the image into YUV format that SDL uses
-        sws_scale(is->video_sws_ctx, (uint8_t const * const *)pFrame->data,
-                  pFrame->linesize, 0, is->video_ctx->height,
-                  vp->bmp->data, vp->bmp->linesize);
+        //进行缩放，并将解码后的YUV数据放入AVPicture *bmp中
+        sws_scale(is->video_sws_ctx,
+                  (uint8_t const * const *)pFrame->data,
+                  pFrame->linesize,
+                  0,
+                  is->video_ctx->height,
+                  vp->bmp->data,
+                  vp->bmp->linesize);
         
         /* now we inform our display thread that we have a pic ready */
         if(++is->pictq_windex == VIDEO_PICTURE_QUEUE_SIZE) {
@@ -912,6 +917,7 @@ int demux_thread(void *arg) {
             SDL_Delay(10);
             continue;
         }
+        //读取一帧一帧的数据，压缩前的packet数据
         if(av_read_frame(is->pFormatCtx, packet) < 0) {
             if(is->pFormatCtx->pb->error == 0) {
                 SDL_Delay(100); /* no error; wait for user input */
