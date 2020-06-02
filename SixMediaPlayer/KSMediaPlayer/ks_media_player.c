@@ -1095,6 +1095,30 @@ fail:
     return 0;
 }
 
+void free_resource() {
+    if (global_video_state->video_sws_ctx) {
+        sws_freeContext(global_video_state->video_sws_ctx);
+    }
+    
+    if (global_video_state->audio_swr_ctx) {
+        swr_free(&global_video_state->audio_swr_ctx);
+    }
+    
+    SDL_Quit();
+    
+    if (global_video_state->audio_ctx) {
+        avcodec_close(global_video_state->audio_ctx);
+    }
+    
+    if (global_video_state->video_ctx) {
+        avcodec_close(global_video_state->video_ctx);
+    }
+    
+    if (global_video_state->pFormatCtx) {
+        avformat_close_input(&global_video_state->pFormatCtx);
+    }
+}
+
 int media_player(char *url){
     
     SDL_Event       event;
