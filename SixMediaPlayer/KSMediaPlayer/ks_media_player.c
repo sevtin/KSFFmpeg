@@ -60,7 +60,7 @@ typedef struct PacketQueue {
 typedef struct VideoPicture {
     AVPicture *bmp;//YUV数据
     int width, height; /* source height & width */
-    int allocated;//是分配YUV数据
+    int allocated;//是否分配YUV数据
     double pts;//展示时间
 } VideoPicture;
 
@@ -182,6 +182,9 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     
     AVPacketList *pkt1;
     //引用计数+1
+    /*
+     av_dup_packet, 通过调用 av_malloc、memcpy、memset等函数， 将shared buffer 的AVPacket duplicate(复制)到独立的buffer中。并且修改AVPacket的析构函数指针av_destruct_pkt。
+     */
     if(av_dup_packet(pkt) < 0) {
         return -1;
     }
@@ -921,9 +924,10 @@ int stream_component_open(VideoState *is, int stream_index) {
                                                                is->audio_ctx->sample_rate,//输入的采样率
                                                                0,
                                                                NULL);
+            swr_init(audio_convert_ctx);
+            
             fprintf(stderr, "swr opts: out_channel_layout:%lld, out_sample_fmt:%d, out_sample_rate:%d, in_channel_layout:%lld, in_sample_fmt:%d, in_sample_rate:%d",
                     out_channel_layout, AV_SAMPLE_FMT_S16, out_sample_rate, in_channel_layout, is->audio_ctx->sample_fmt, is->audio_ctx->sample_rate);
-            swr_init(audio_convert_ctx);
             
             is->audio_swr_ctx = audio_convert_ctx;
             //开始播放
@@ -1001,9 +1005,10 @@ int demux_thread(void *arg) {
     int audio_index = -1;
     int i;
     
-    is->videoStream=-1;
-    is->audioStream=-1;
+    is->videoStream = -1;
+    is->audioStream = -1;
     
+    //设置全局视频状态
     global_video_state = is;
     
     /* open input file, and allocate format context */
