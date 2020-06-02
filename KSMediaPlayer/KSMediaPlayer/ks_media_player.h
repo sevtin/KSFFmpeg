@@ -12,5 +12,5 @@
 #include <stdio.h>
 
 int media_player(char *url);
-
+int media_player1(char *url);
 #endif /* ks_media_player_h */

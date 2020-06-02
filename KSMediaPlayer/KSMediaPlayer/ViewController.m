@@ -21,7 +21,7 @@
 
 - (void)mediaPlayer {
     char *url = "/Users/saeipi/Downloads/File/SOPSandwich.mp4";
-    media_player(url);
+    media_player1(url);
 }
 
 - (void)setRepresentedObject:(id)representedObject {
