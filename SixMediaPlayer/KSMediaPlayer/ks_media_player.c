@@ -41,16 +41,21 @@
 #define DEFAULT_AV_SYNC_TYPE AV_SYNC_AUDIO_MASTER //AV_SYNC_VIDEO_MASTER
 
 typedef struct PacketQueue {
+    //队列头，队列尾
     AVPacketList *first_pkt, *last_pkt;
+    //队列中有多少个包
     int nb_packets;
+    //对了存储空间大小
     int size;
+    //互斥量：加锁，解锁用
     SDL_mutex *mutex;
+    //条件变量：同步用
     SDL_cond *cond;
 } PacketQueue;
 
 
 typedef struct VideoPicture {
-    AVPicture *bmp;
+    AVPicture *bmp;//YUV数据
     int width, height; /* source height & width */
     int allocated;
     double pts;
@@ -60,6 +65,7 @@ typedef struct VideoState {
     
     //multi-media file
     char            filename[1024];
+    //多媒体文件格式上下文
     AVFormatContext *pFormatCtx;
     int             videoStream, audioStream;
     
@@ -73,43 +79,64 @@ typedef struct VideoState {
     double          audio_diff_threshold;
     int             audio_diff_avg_count;
     
+    //音频正在播放的时间
     double          audio_clock;
+    //下次要回调的timer是多少
     double          frame_timer;
+    //上一帧播放视频帧的pts
     double          frame_last_pts;
+    //上一帧播放视频帧增加的delay
     double          frame_last_delay;
-    
+    //下一帧，将要播放视频帧的pts时间
     double          video_clock; ///<pts of last decoded frame / predicted pts of next decoded frame
     double          video_current_pts; ///<current displayed pts (different from video_clock if frame fifos are used)
     int64_t         video_current_pts_time;  ///<time (av_gettime) at which we updated video_current_pts - used to have running video pts
     
     //audio
+    //音频流
     AVStream        *audio_st;
+    //音频解码上下文
     AVCodecContext  *audio_ctx;
+    //音频队列
     PacketQueue     audioq;
+    //解码后的音频缓冲区
     uint8_t         audio_buf[(MAX_AUDIO_FRAME_SIZE * 3) / 2];
+    //缓冲区大小
     unsigned int    audio_buf_size;
+    //现在已经使用了多少字节
     unsigned int    audio_buf_index;
+    //解码后的音频帧
     AVFrame         audio_frame;
+    //解码之前的音频包
     AVPacket        audio_pkt;
+    //解码前音频包数据的指针
     uint8_t         *audio_pkt_data;
+    //解码后音频数据大小
     int             audio_pkt_size;
+    
     int             audio_hw_buf_size;
     
     //video
     AVStream        *video_st;
     AVCodecContext  *video_ctx;
     PacketQueue     videoq;
+    //视频裁剪上下文
     struct SwsContext *video_sws_ctx;
+    //音频重采样上下文，因为音频设备的参数是固定的，所以需要重采样
     struct SwrContext *audio_swr_ctx;
-    
+    //解码后的视频帧队列
     VideoPicture    pictq[VIDEO_PICTURE_QUEUE_SIZE];
+    //pictq_size：解码后的队列大小，pictq_rindex：取的位置，pictq_windex：存的位置
     int             pictq_size, pictq_rindex, pictq_windex;
+    //视频帧队列锁
     SDL_mutex       *pictq_mutex;
+    //视频帧队列信号量
     SDL_cond        *pictq_cond;
-    
+    //解复用线程
     SDL_Thread      *parse_tid;
+    //解码线程
     SDL_Thread      *video_tid;
-    
+    //退出：1退出
     int             quit;
 } VideoState;
 
@@ -118,6 +145,7 @@ SDL_Window   *win = NULL;
 SDL_Renderer *renderer;
 SDL_Texture  *texture;
 
+//同步方案
 enum {
     AV_SYNC_AUDIO_MASTER,
     AV_SYNC_VIDEO_MASTER,
@@ -626,6 +654,7 @@ int decode_video_thread(void *arg) {
     AVFrame *pFrame;
     double pts;
     
+    // 存放解码后的数据帧
     pFrame = av_frame_alloc();
     
     for(;;) {
@@ -767,10 +796,15 @@ int stream_component_open(VideoState *is, int stream_index) {
             is->video_current_pts_time = av_gettime();
             
             packet_queue_init(&is->videoq);
-            is->video_sws_ctx = sws_getContext(is->video_ctx->width, is->video_ctx->height,
-                                               is->video_ctx->pix_fmt, is->video_ctx->width,
-                                               is->video_ctx->height, AV_PIX_FMT_YUV420P,
-                                               SWS_BILINEAR, NULL, NULL, NULL
+            //图像裁剪
+            is->video_sws_ctx = sws_getContext(is->video_ctx->width,//原始宽
+                                               is->video_ctx->height,//原始高
+                                               is->video_ctx->pix_fmt,
+                                               is->video_ctx->width,//输出宽
+                                               is->video_ctx->height,//输出高
+                                               AV_PIX_FMT_YUV420P,
+                                               SWS_BILINEAR,
+                                               NULL, NULL, NULL
                                                );
             is->video_tid = SDL_CreateThread(decode_video_thread, "decode_video_thread", is);
             break;
@@ -787,7 +821,7 @@ void create_window(int width, int height) {
                            SDL_WINDOWPOS_UNDEFINED,
                            width,
                            height,
-                           SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+                           SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);//SDL_WINDOW_RESIZABLE:可大可小
     if(!win) {
         fprintf(stderr, "SDL: could not set video mode - exiting\n");
         exit(1);
@@ -797,6 +831,7 @@ void create_window(int width, int height) {
     
     //IYUV: Y + U + V  (3 planes)
     //YV12: Y + V + U  (3 planes)
+    //像素格式：YUV的数据
     Uint32 pixformat= SDL_PIXELFORMAT_IYUV;
     
     //create texture for render
@@ -926,11 +961,11 @@ int media_player(char *url){
     // Register all formats and codecs
     av_register_all();
     
+    //视频 | 音频 | timer
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER)) {
         fprintf(stderr, "Could not initialize SDL - %s\n", SDL_GetError());
         exit(1);
     }
-    
     create_window(640, 360);
     
     text_mutex = SDL_CreateMutex();
