@@ -914,13 +914,13 @@ int stream_component_open(VideoState *is, int stream_index) {
             int64_t in_channel_layout=av_get_default_channel_layout(is->audio_ctx->channels);
             
             //进行音频重采样，确保正常输出
-            struct SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,
-                                                                      out_channel_layout,
-                                                                      AV_SAMPLE_FMT_S16,
-                                                                      out_sample_rate,
-                                                                      in_channel_layout,
-                                                                      is->audio_ctx->sample_fmt,
-                                                                      is->audio_ctx->sample_rate,
+            struct SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,//ctx
+                                                                      out_channel_layout,//输出channel布局
+                                                                      AV_SAMPLE_FMT_S16,//输出的采样格式
+                                                                      out_sample_rate,//采样率
+                                                                      in_channel_layout,//输入channel布局
+                                                                      is->audio_ctx->sample_fmt,//输入的采样格式
+                                                                      is->audio_ctx->sample_rate,//输入的采样率
                                                                       0,
                                                                       NULL);
             fprintf(stderr, "swr opts: out_channel_layout:%lld, out_sample_fmt:%d, out_sample_rate:%d, in_channel_layout:%lld, in_sample_fmt:%d, in_sample_rate:%d",

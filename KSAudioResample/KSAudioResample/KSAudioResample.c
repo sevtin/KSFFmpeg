@@ -16,6 +16,7 @@ void update_status(int status) {
 
 SwrContext* init_swr() {
     SwrContext *swr_ctx = NULL;
+    printf("AV_CH_LAYOUT_STEREO: %d",AV_CH_LAYOUT_STEREO);
     /* channel, number */
     swr_ctx = swr_alloc_set_opts(NULL,//ctx
                                  AV_CH_LAYOUT_STEREO,//输出channel布局

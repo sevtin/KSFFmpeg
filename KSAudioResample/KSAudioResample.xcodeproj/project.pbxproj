@@ -12,14 +12,15 @@
 		E6748429247260A500379698 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6748428247260A500379698 /* Assets.xcassets */; };
 		E674842C247260A500379698 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E674842A247260A500379698 /* Main.storyboard */; };
 		E6748437247260C500379698 /* KSAudioResample.c in Sources */ = {isa = PBXBuildFile; fileRef = E6748436247260C500379698 /* KSAudioResample.c */; };
-		E67484412472615F00379698 /* libswscale.5.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E67484392472615F00379698 /* libswscale.5.5.100.dylib */; };
-		E67484422472615F00379698 /* libpostproc.55.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843A2472615F00379698 /* libpostproc.55.5.100.dylib */; };
-		E67484432472615F00379698 /* libavdevice.58.8.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843B2472615F00379698 /* libavdevice.58.8.100.dylib */; };
-		E67484442472615F00379698 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843C2472615F00379698 /* libavformat.58.29.100.dylib */; };
-		E67484452472615F00379698 /* libavcodec.58.54.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843D2472615F00379698 /* libavcodec.58.54.100.dylib */; };
-		E67484462472615F00379698 /* libswresample.3.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843E2472615F00379698 /* libswresample.3.5.100.dylib */; };
-		E67484472472615F00379698 /* libavfilter.7.57.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E674843F2472615F00379698 /* libavfilter.7.57.100.dylib */; };
-		E67484482472615F00379698 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E67484402472615F00379698 /* libavutil.56.31.100.dylib */; };
+		E69701E024864319002788EE /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701D724864319002788EE /* libswresample.a */; };
+		E69701E124864319002788EE /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701D824864319002788EE /* libswscale.a */; };
+		E69701E224864319002788EE /* libavresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701D924864319002788EE /* libavresample.a */; };
+		E69701E324864319002788EE /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701DA24864319002788EE /* libavdevice.a */; };
+		E69701E424864319002788EE /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701DB24864319002788EE /* libavutil.a */; };
+		E69701E524864319002788EE /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701DC24864319002788EE /* libavfilter.a */; };
+		E69701E624864319002788EE /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701DD24864319002788EE /* libavcodec.a */; };
+		E69701E724864319002788EE /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701DE24864319002788EE /* libavformat.a */; };
+		E69701E824864319002788EE /* libpostproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E69701DF24864319002788EE /* libpostproc.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,14 +34,15 @@
 		E6748434247260C500379698 /* KSAudioResample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KSAudioResample-Bridging-Header.h"; sourceTree = "<group>"; };
 		E6748435247260C500379698 /* KSAudioResample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSAudioResample.h; sourceTree = "<group>"; };
 		E6748436247260C500379698 /* KSAudioResample.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = KSAudioResample.c; sourceTree = "<group>"; };
-		E67484392472615F00379698 /* libswscale.5.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswscale.5.5.100.dylib; sourceTree = "<group>"; };
-		E674843A2472615F00379698 /* libpostproc.55.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpostproc.55.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libpostproc.55.5.100.dylib; sourceTree = "<group>"; };
-		E674843B2472615F00379698 /* libavdevice.58.8.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.58.8.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavdevice.58.8.100.dylib; sourceTree = "<group>"; };
-		E674843C2472615F00379698 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
-		E674843D2472615F00379698 /* libavcodec.58.54.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.54.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavcodec.58.54.100.dylib; sourceTree = "<group>"; };
-		E674843E2472615F00379698 /* libswresample.3.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.5.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libswresample.3.5.100.dylib; sourceTree = "<group>"; };
-		E674843F2472615F00379698 /* libavfilter.7.57.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavfilter.7.57.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavfilter.7.57.100.dylib; sourceTree = "<group>"; };
-		E67484402472615F00379698 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../usr/local/ffmpeg/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
+		E69701D724864319002788EE /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libswresample.a; sourceTree = "<group>"; };
+		E69701D824864319002788EE /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libswscale.a; sourceTree = "<group>"; };
+		E69701D924864319002788EE /* libavresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavresample.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavresample.a; sourceTree = "<group>"; };
+		E69701DA24864319002788EE /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavdevice.a; sourceTree = "<group>"; };
+		E69701DB24864319002788EE /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavutil.a; sourceTree = "<group>"; };
+		E69701DC24864319002788EE /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavfilter.a; sourceTree = "<group>"; };
+		E69701DD24864319002788EE /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavcodec.a; sourceTree = "<group>"; };
+		E69701DE24864319002788EE /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavformat.a; sourceTree = "<group>"; };
+		E69701DF24864319002788EE /* libpostproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpostproc.a; path = ../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libpostproc.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,14 +50,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E67484412472615F00379698 /* libswscale.5.5.100.dylib in Frameworks */,
-				E67484422472615F00379698 /* libpostproc.55.5.100.dylib in Frameworks */,
-				E67484432472615F00379698 /* libavdevice.58.8.100.dylib in Frameworks */,
-				E67484442472615F00379698 /* libavformat.58.29.100.dylib in Frameworks */,
-				E67484452472615F00379698 /* libavcodec.58.54.100.dylib in Frameworks */,
-				E67484462472615F00379698 /* libswresample.3.5.100.dylib in Frameworks */,
-				E67484472472615F00379698 /* libavfilter.7.57.100.dylib in Frameworks */,
-				E67484482472615F00379698 /* libavutil.56.31.100.dylib in Frameworks */,
+				E69701E024864319002788EE /* libswresample.a in Frameworks */,
+				E69701E124864319002788EE /* libswscale.a in Frameworks */,
+				E69701E224864319002788EE /* libavresample.a in Frameworks */,
+				E69701E324864319002788EE /* libavdevice.a in Frameworks */,
+				E69701E424864319002788EE /* libavutil.a in Frameworks */,
+				E69701E524864319002788EE /* libavfilter.a in Frameworks */,
+				E69701E624864319002788EE /* libavcodec.a in Frameworks */,
+				E69701E724864319002788EE /* libavformat.a in Frameworks */,
+				E69701E824864319002788EE /* libpostproc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,14 +101,15 @@
 		E67484382472615F00379698 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E674843D2472615F00379698 /* libavcodec.58.54.100.dylib */,
-				E674843B2472615F00379698 /* libavdevice.58.8.100.dylib */,
-				E674843F2472615F00379698 /* libavfilter.7.57.100.dylib */,
-				E674843C2472615F00379698 /* libavformat.58.29.100.dylib */,
-				E67484402472615F00379698 /* libavutil.56.31.100.dylib */,
-				E674843A2472615F00379698 /* libpostproc.55.5.100.dylib */,
-				E674843E2472615F00379698 /* libswresample.3.5.100.dylib */,
-				E67484392472615F00379698 /* libswscale.5.5.100.dylib */,
+				E69701DD24864319002788EE /* libavcodec.a */,
+				E69701DA24864319002788EE /* libavdevice.a */,
+				E69701DC24864319002788EE /* libavfilter.a */,
+				E69701DE24864319002788EE /* libavformat.a */,
+				E69701D924864319002788EE /* libavresample.a */,
+				E69701DB24864319002788EE /* libavutil.a */,
+				E69701DF24864319002788EE /* libpostproc.a */,
+				E69701D724864319002788EE /* libswresample.a */,
+				E69701D824864319002788EE /* libswscale.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -330,14 +334,14 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/ffmpeg/lib,
+					/Users/saeipi/Documents/Library/FFmpeg/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.AudioResample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "KSAudioResample/KSAudioResample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+				USER_HEADER_SEARCH_PATHS = /Users/saeipi/Documents/Library/FFmpeg/include;
 			};
 			name = Debug;
 		};
@@ -357,13 +361,13 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/ffmpeg/lib,
+					/Users/saeipi/Documents/Library/FFmpeg/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.AudioResample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "KSAudioResample/KSAudioResample-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				USER_HEADER_SEARCH_PATHS = /usr/local/ffmpeg/include;
+				USER_HEADER_SEARCH_PATHS = /Users/saeipi/Documents/Library/FFmpeg/include;
 			};
 			name = Release;
 		};
