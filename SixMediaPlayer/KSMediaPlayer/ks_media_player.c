@@ -161,33 +161,45 @@ void packet_queue_init(PacketQueue *q) {
     q->mutex = SDL_CreateMutex();
     q->cond = SDL_CreateCond();
 }
+
+//入队，q：队列，pck：要插入的数据包
 int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     
     AVPacketList *pkt1;
+    //引用计数+1
     if(av_dup_packet(pkt) < 0) {
         return -1;
     }
+    //分配空间
     pkt1 = av_malloc(sizeof(AVPacketList));
     if (!pkt1)
         return -1;
     pkt1->pkt = *pkt;
     pkt1->next = NULL;
     
+    //加锁
     SDL_LockMutex(q->mutex);
     
     if (!q->last_pkt)
-        q->first_pkt = pkt1;
+        q->first_pkt = pkt1;//如果是空队列
     else
-        q->last_pkt->next = pkt1;
-    q->last_pkt = pkt1;
-    q->nb_packets++;
-    q->size += pkt1->pkt.size;
-    SDL_CondSignal(q->cond);
+        q->last_pkt->next = pkt1;//设成最后一个包的下一个元素
     
+    //移动指针，最后一个元素指向pkt1
+    q->last_pkt = pkt1;
+    //元素个数增加
+    q->nb_packets++;
+    //统计每一个包的size，求和
+    q->size += pkt1->pkt.size;
+    //发送信号，让等待的线程唤醒
+    //这里的实现：条件变量先解锁->发送信号->再加锁，SDL_CondSignal需要在所中间做
+    SDL_CondSignal(q->cond);
+    //解锁
     SDL_UnlockMutex(q->mutex);
     return 0;
 }
 
+//出队，pck为out，block是否阻塞
 int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
 {
     AVPacketList *pkt1;
@@ -201,15 +213,21 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
             ret = -1;
             break;
         }
-        
+        //获取队列头
         pkt1 = q->first_pkt;
         if (pkt1) {
+            //更新队列头的指针
             q->first_pkt = pkt1->next;
             if (!q->first_pkt)
-                q->last_pkt = NULL;
+                q->last_pkt = NULL;//队列已经空了
+            
+            //元素个数减1
             q->nb_packets--;
+            //减去出队列包数据大小
             q->size -= pkt1->pkt.size;
+            //取出真正的AVPacket数据
             *pkt = pkt1->pkt;
+            //释放分配的内存
             av_free(pkt1);
             ret = 1;
             break;
@@ -217,9 +235,12 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
             ret = 0;
             break;
         } else {
+            //如果没有取到数据，加锁等待
+            //这里的实现：先解锁->发送信号->再加锁，SDL_CondWait需要在所中间做
             SDL_CondWait(q->cond, q->mutex);
         }
     }
+    //解锁
     SDL_UnlockMutex(q->mutex);
     return ret;
 }
@@ -240,12 +261,14 @@ double get_audio_clock(VideoState *is) {
     }
     return pts;
 }
+
 double get_video_clock(VideoState *is) {
     double delta;
     
     delta = (av_gettime() - is->video_current_pts_time) / 1000000.0;
     return is->video_current_pts + delta;
 }
+
 double get_external_clock(VideoState *is) {
     return av_gettime() / 1000000.0;
 }
@@ -335,6 +358,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
         while(is->audio_pkt_size > 0) {
             //有未解码的数据
             int got_frame = 0;
+            //取出一个音频包，进行解码
             len1 = avcodec_decode_audio4(is->audio_ctx, &is->audio_frame, &got_frame, pkt);
             if(len1 < 0) {
                 //解码失败
@@ -355,13 +379,14 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 if (data_size <= buf_size) {
                     return -1;
                 }
-                //转成声卡识别的声音
+                //重采样，转成声卡识别的声音
                 swr_convert(is->audio_swr_ctx,
                             &audio_buf,
                             MAX_AUDIO_FRAME_SIZE*3/2,
                             (const uint8_t **)is->audio_frame.data,
                             is->audio_frame.nb_samples);
                 
+                //通过audio_buf返回数据
                 //fwrite(audio_buf, 1, data_size, audiofd);
                 memcpy(audio_buf, is->audio_frame.data[0], data_size);
             }
@@ -415,6 +440,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
             //audio_buf_index >= audio_buf_size：缓冲区已经没有数据
             
             /* We have already sent all our data; get more */
+            //从音频队列中取出一个包，进行解码
             //音频解码，解码成功后会拿到解码后数据的大小
             audio_size = audio_decode_frame(is, is->audio_buf, sizeof(is->audio_buf), &pts);
             if(audio_size < 0) {
@@ -430,8 +456,11 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
             is->audio_buf_index = 0;
         }
         len1 = is->audio_buf_size - is->audio_buf_index;
+        
+        //缓冲区大，还是解码数据大
         if(len1 > len)
-            len1 = len;
+            len1 = len;//如果解码数据大，则使用缓冲区的数据
+        
         SDL_MixAudio(stream,(uint8_t *)is->audio_buf + is->audio_buf_index, len1, SDL_MIX_MAXVOLUME);
         //memcpy(stream, (uint8_t *)is->audio_buf + is->audio_buf_index, len1);//将解码后audio_buf的数据拷贝到stream中去
         len -= len1;
@@ -450,6 +479,7 @@ static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque) {
 
 /* schedule a video refresh in 'delay' ms */
 static void schedule_refresh(VideoState *is, int delay) {
+    //触发主线程
     SDL_AddTimer(delay, sdl_refresh_timer_cb, is);
 }
 
@@ -482,6 +512,7 @@ void video_display(VideoState *is) {
     }
 }
 
+//主线程！！！
 void video_refresh_timer(void *userdata) {
     
     VideoState *is = (VideoState *)userdata;
@@ -489,6 +520,7 @@ void video_refresh_timer(void *userdata) {
     double actual_delay, delay, sync_threshold, ref_clock, diff;
     
     if(is->video_st) {
+        //视频解码数据为0,则递归查询数据
         if(is->pictq_size == 0) {
             schedule_refresh(is, 1);
             //fprintf(stderr, "no picture in the queue!!!\n");
@@ -530,9 +562,11 @@ void video_refresh_timer(void *userdata) {
                 /* Really it should skip the picture instead */
                 actual_delay = 0.010;
             }
+            //递归X毫秒播一帧
             schedule_refresh(is, (int)(actual_delay * 1000 + 0.5));
             
             /* show the picture! */
+             //展示当前帧
             video_display(is);
             
             /* update queue for next picture! */
@@ -663,6 +697,7 @@ double synchronize_video(VideoState *is, AVFrame *src_frame, double pts) {
     return pts;
 }
 
+//视频解码线程
 int decode_video_thread(void *arg) {
     VideoState *is = (VideoState *)arg;
     AVPacket pkt1, *packet = &pkt1;
@@ -674,6 +709,7 @@ int decode_video_thread(void *arg) {
     pFrame = av_frame_alloc();
     
     for(;;) {
+        //从视频队列中取出视频AVPacket包
         if(packet_queue_get(&is->videoq, packet, 1) < 0) {
             // means we quit getting packets
             break;
@@ -694,6 +730,7 @@ int decode_video_thread(void *arg) {
         if(frameFinished) {
             //计算pts
             pts = synchronize_video(is, pFrame, pts);
+            //视频帧放入解码后的视频队列中去
             if(queue_picture(is, pFrame, pts) < 0) {
                 break;
             }
@@ -704,6 +741,7 @@ int decode_video_thread(void *arg) {
     return 0;
 }
 
+//通过stream_index找到流的信息
 int stream_component_open(VideoState *is, int stream_index) {
     
     AVFormatContext *pFormatCtx = is->pFormatCtx;
@@ -733,13 +771,13 @@ int stream_component_open(VideoState *is, int stream_index) {
         
         // Set audio settings from codec info
         //设置想要的音频播放参数
-        wanted_spec.freq = codecCtx->sample_rate;
-        wanted_spec.format = AUDIO_S16SYS;
+        wanted_spec.freq = codecCtx->sample_rate;//采样率
+        wanted_spec.format = AUDIO_S16SYS;//采样格式
         wanted_spec.channels = 2;//codecCtx->channels;
         wanted_spec.silence = 0;
-        wanted_spec.samples = SDL_AUDIO_BUFFER_SIZE;
-        wanted_spec.callback = audio_callback;
-        wanted_spec.userdata = is;
+        wanted_spec.samples = SDL_AUDIO_BUFFER_SIZE;//采样个数，每秒钟有多少个采样
+        wanted_spec.callback = audio_callback;//回调函数
+        wanted_spec.userdata = is;//回调函数参数
         
         fprintf(stderr, "wanted spec: channels:%d, sample_fmt:%d, sample_rate:%d \n",
                 2, AUDIO_S16SYS, codecCtx->sample_rate);
@@ -759,11 +797,14 @@ int stream_component_open(VideoState *is, int stream_index) {
     
     switch(codecCtx->codec_type) {
         case AVMEDIA_TYPE_AUDIO:
+            //音频流index
             is->audioStream = stream_index;
+            //具体的音频流
             is->audio_st = pFormatCtx->streams[stream_index];
             is->audio_ctx = codecCtx;
             is->audio_buf_size = 0;
             is->audio_buf_index = 0;
+            //设置音频包
             memset(&is->audio_pkt, 0, sizeof(is->audio_pkt));
             //初始化音频队列，读取音频包后不是马上解码，而是存储到音频队列中，当声卡需要数据的时候，调用回调函数，回调函数再从队列中取出一个个音频包，再进行解码，解码后的数据再拷贝到音频驱动中去
             packet_queue_init(&is->audioq);
@@ -826,6 +867,7 @@ int stream_component_open(VideoState *is, int stream_index) {
                                                SWS_BILINEAR,
                                                NULL, NULL, NULL
                                                );
+            //创建视频解码线程
             is->video_tid = SDL_CreateThread(decode_video_thread, "decode_video_thread", is);
             break;
         default:
@@ -862,6 +904,7 @@ void create_window(int width, int height) {
                                 height);
 }
 
+//解复用线程
 int demux_thread(void *arg) {
     
     int err_code;
@@ -921,9 +964,11 @@ int demux_thread(void *arg) {
     }
     
     // main decode loop
-    
     for(;;) {
         if(is->quit) {
+            //发送信号量，告诉等待线程，等待线程判断是否quit
+            //SDL_CondSignal(is->videoq.cond);
+            //SDL_CondSignal(is->audioq.cond);
             break;
         }
         // seek stuff goes here
@@ -943,8 +988,10 @@ int demux_thread(void *arg) {
         }
         // Is this a packet from the video stream?
         if(packet->stream_index == is->videoStream) {
+            //放入视频队列
             packet_queue_put(&is->videoq, packet);
         } else if(packet->stream_index == is->audioStream) {
+            //放入音频队列
             packet_queue_put(&is->audioq, packet);
         } else {
             av_free_packet(packet);
@@ -958,7 +1005,7 @@ int demux_thread(void *arg) {
 fail:
     if(1){
         SDL_Event event;
-        event.type = FF_QUIT_EVENT;
+        event.type = FF_QUIT_EVENT;//发信号，退出
         event.user.data1 = is;
         SDL_PushEvent(&event);
     }
@@ -967,11 +1014,10 @@ fail:
 
 int media_player(char *url){
     
-    
     SDL_Event       event;
-    
     VideoState      *is;
     
+    //分配空间
     is = av_mallocz(sizeof(VideoState));
     
     if(!url) {
@@ -987,18 +1033,22 @@ int media_player(char *url){
         fprintf(stderr, "Could not initialize SDL - %s\n", SDL_GetError());
         exit(1);
     }
+    //创建SDL WindowW
     create_window(640, 360);
     
     text_mutex = SDL_CreateMutex();
     
     av_strlcpy(is->filename, url, sizeof(is->filename));
     
+    //创建解码视频帧队列线程锁和信号量
     is->pictq_mutex = SDL_CreateMutex();
     is->pictq_cond = SDL_CreateCond();
     
+    //每40秒渲染一次视频帧
     schedule_refresh(is, 40);
     
     is->av_sync_type = DEFAULT_AV_SYNC_TYPE;
+    //创建解复用线程
     is->parse_tid = SDL_CreateThread(demux_thread,"demux_thread", is);
     if(!is->parse_tid) {
         av_free(is);
