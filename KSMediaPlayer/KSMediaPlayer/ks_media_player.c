@@ -40,16 +40,127 @@
 
 #define DEFAULT_AV_SYNC_TYPE AV_SYNC_AUDIO_MASTER //AV_SYNC_VIDEO_MASTER
 
+typedef struct PacketQueue {
+    //队列头，队列尾
+    AVPacketList *first_pkt, *last_pkt;
+    //队列中有多少个包
+    int nb_packets;
+    //对了存储空间大小
+    int size;
+    //互斥量：加锁，解锁用
+    SDL_mutex *mutex;
+    //条件变量：同步用
+    SDL_cond *cond;
+} PacketQueue;
+
+
+typedef struct VideoPicture {
+    AVPicture *bmp;
+    int width, height; /* source height & width */
+    int allocated;
+    double pts;
+} VideoPicture;
+
+typedef struct VideoState {
+    
+    //multi-media file
+    char            filename[1024];
+    //多媒体文件格式上下文
+    AVFormatContext *pFormatCtx;
+    int             videoStream, audioStream;
+    
+    //sync
+    int             av_sync_type;
+    double          external_clock; /* external clock base */
+    int64_t         external_clock_time;
+    
+    double          audio_diff_cum; /* used for AV difference average computation */
+    double          audio_diff_avg_coef;
+    double          audio_diff_threshold;
+    int             audio_diff_avg_count;
+    
+    //音频正在播放的时间
+    double          audio_clock;
+    //下次要回调的timer是多少
+    double          frame_timer;
+    //上一帧播放视频帧的pts
+    double          frame_last_pts;
+    //上一帧播放视频帧增加的delay
+    double          frame_last_delay;
+    //下一帧，将要播放视频帧的pts时间
+    double          video_clock; ///<pts of last decoded frame / predicted pts of next decoded frame
+    double          video_current_pts; ///<current displayed pts (different from video_clock if frame fifos are used)
+    int64_t         video_current_pts_time;  ///<time (av_gettime) at which we updated video_current_pts - used to have running video pts
+    
+    //audio
+    //音频流
+    AVStream        *audio_st;
+    //音频解码上下文
+    AVCodecContext  *audio_ctx;
+    //音频队列
+    PacketQueue     audioq;
+    //解码后的音频缓冲区
+    uint8_t         audio_buf[(MAX_AUDIO_FRAME_SIZE * 3) / 2];
+    //缓冲区大小
+    unsigned int    audio_buf_size;
+    //现在已经使用了多少字节
+    unsigned int    audio_buf_index;
+    //解码后的音频帧
+    AVFrame         audio_frame;
+    //解码之前的音频包
+    AVPacket        audio_pkt;
+    //解码前音频包数据的指针
+    uint8_t         *audio_pkt_data;
+    //解码后音频数据大小
+    int             audio_pkt_size;
+    
+    int             audio_hw_buf_size;
+    
+    //video
+    AVStream        *video_st;
+    AVCodecContext  *video_ctx;
+    PacketQueue     videoq;
+    //视频裁剪上下文
+    struct SwsContext *video_sws_ctx;
+    //音频重采样上下文，因为音频设备的参数是固定的，所以需要重采样
+    struct SwrContext *audio_swr_ctx;
+    //解码后的视频帧队列
+    VideoPicture    pictq[VIDEO_PICTURE_QUEUE_SIZE];
+    //pictq_size：解码后的队列大小，pictq_rindex：取的位置，pictq_windex：存的位置
+    int             pictq_size, pictq_rindex, pictq_windex;
+    //视频帧队列锁
+    SDL_mutex       *pictq_mutex;
+    //视频帧队列信号量
+    SDL_cond        *pictq_cond;
+    //解复用线程
+    SDL_Thread      *parse_tid;
+    //解码线程
+    SDL_Thread      *video_tid;
+    //退出：1退出
+    int             quit;
+} VideoState;
+
+SDL_mutex    *text_mutex;
+SDL_Window   *win = NULL;
+SDL_Renderer *renderer;
+SDL_Texture  *texture;
+
+enum {
+    AV_SYNC_AUDIO_MASTER,
+    AV_SYNC_VIDEO_MASTER,
+    AV_SYNC_EXTERNAL_MASTER,
+};
+
 //音频参数设置，例如采样率，采样格式，双声道
 struct SwrContext *audio_convert_ctx = NULL;
 
-typedef struct PacketQueue {
-    AVPacketList *first_pkt, *last_pkt;
-    int nb_packets;
-    int size;
-    SDL_mutex *mutex;
-    SDL_cond *cond;
-} PacketQueue;
+//typedef struct PacketQueue {
+//    AVPacketList *first_pkt, *last_pkt;
+//    int nb_packets;
+//    int size;
+//    SDL_mutex *mutex;
+//    SDL_cond *cond;
+//} PacketQueue;
 
 PacketQueue audioq;
 
