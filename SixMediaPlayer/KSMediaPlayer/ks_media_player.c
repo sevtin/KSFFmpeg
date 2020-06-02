@@ -13,6 +13,7 @@
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
+#include "libswresample/swresample.h"
 #include "SDL2/SDL.h"
 
 // compatibility with newer API
@@ -130,7 +131,7 @@ typedef struct VideoState {
     
     struct SwsContext *video_sws_ctx;
     //音频重采样上下文，因为音频设备的参数是固定的，所以需要重采样（参数设置，例如采样率，采样格式，双声道）
-    struct SwrContext *audio_swr_ctx;
+    SwrContext *audio_swr_ctx;
     
     //解码后的视频帧队列
     VideoPicture    pictq[VIDEO_PICTURE_QUEUE_SIZE];
@@ -425,11 +426,11 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 data_size = 2 * is->audio_frame.nb_samples * 2;
                 assert(data_size <= buf_size);
                 
-                /*
-                if (data_size <= buf_size) {
-                    return -1;
-                }
-                 */
+                /* 进行内存拷贝，按字节拷贝的 */
+                //通过audio_buf返回数据
+                //fwrite(audio_buf, 1, data_size, audiofd);
+                memcpy(audio_buf, is->audio_frame.data[0], data_size);
+                
                 /*
                  int swr_convert(struct SwrContext *s, uint8_t **out, int out_count, const uint8_t **in, int in_count);
                  参数1：音频重采样的上下文
@@ -445,9 +446,6 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                             (const uint8_t **)is->audio_frame.data,
                             is->audio_frame.nb_samples);
                 
-                //通过audio_buf返回数据
-                //fwrite(audio_buf, 1, data_size, audiofd);
-                memcpy(audio_buf, is->audio_frame.data[0], data_size);
             }
             //更新音频数据大小
             is->audio_pkt_data += len1;
@@ -914,18 +912,19 @@ int stream_component_open(VideoState *is, int stream_index) {
             int64_t in_channel_layout=av_get_default_channel_layout(is->audio_ctx->channels);
             
             //进行音频重采样，确保正常输出
-            struct SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,//ctx
-                                                                      out_channel_layout,//输出channel布局
-                                                                      AV_SAMPLE_FMT_S16,//输出的采样格式
-                                                                      out_sample_rate,//采样率
-                                                                      in_channel_layout,//输入channel布局
-                                                                      is->audio_ctx->sample_fmt,//输入的采样格式
-                                                                      is->audio_ctx->sample_rate,//输入的采样率
-                                                                      0,
-                                                                      NULL);
+            SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,//ctx
+                                                               out_channel_layout,//输出channel布局
+                                                               AV_SAMPLE_FMT_S16,//输出的采样格式
+                                                               out_sample_rate,//采样率
+                                                               in_channel_layout,//输入channel布局
+                                                               is->audio_ctx->sample_fmt,//输入的采样格式
+                                                               is->audio_ctx->sample_rate,//输入的采样率
+                                                               0,
+                                                               NULL);
             fprintf(stderr, "swr opts: out_channel_layout:%lld, out_sample_fmt:%d, out_sample_rate:%d, in_channel_layout:%lld, in_sample_fmt:%d, in_sample_rate:%d",
                     out_channel_layout, AV_SAMPLE_FMT_S16, out_sample_rate, in_channel_layout, is->audio_ctx->sample_fmt, is->audio_ctx->sample_rate);
-
+            swr_init(audio_convert_ctx);
+            
             is->audio_swr_ctx = audio_convert_ctx;
             //开始播放
             SDL_PauseAudio(0);
@@ -1155,6 +1154,6 @@ int media_player(char *url){
                 break;
         }
     }
-
+    
     return 0;
 }
