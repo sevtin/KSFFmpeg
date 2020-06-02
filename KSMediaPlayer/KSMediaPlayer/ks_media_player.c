@@ -55,7 +55,7 @@ typedef struct PacketQueue {
 
 
 typedef struct VideoPicture {
-    AVPicture *bmp;
+    AVPicture *bmp;//YUV数据
     int width, height; /* source height & width */
     int allocated;
     double pts;
@@ -145,6 +145,7 @@ SDL_Window   *win = NULL;
 SDL_Renderer *renderer;
 SDL_Texture  *texture;
 
+//同步方案
 enum {
     AV_SYNC_AUDIO_MASTER,
     AV_SYNC_VIDEO_MASTER,
