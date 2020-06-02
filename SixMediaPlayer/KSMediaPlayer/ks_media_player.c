@@ -59,8 +59,8 @@ typedef struct PacketQueue {
 typedef struct VideoPicture {
     AVPicture *bmp;//YUV数据
     int width, height; /* source height & width */
-    int allocated;
-    double pts;
+    int allocated;//是分配YUV数据
+    double pts;//展示时间
 } VideoPicture;
 
 typedef struct VideoState {
@@ -116,17 +116,22 @@ typedef struct VideoState {
     uint8_t         *audio_pkt_data;
     //解码后音频数据大小
     int             audio_pkt_size;
-    
+    //视乎没有用到？？？
     int             audio_hw_buf_size;
     
     //video
+    //视频流
     AVStream        *video_st;
+    //视屏解码上下文
     AVCodecContext  *video_ctx;
+    //视频队列
     PacketQueue     videoq;
     //视频裁剪上下文
+    
     struct SwsContext *video_sws_ctx;
     //音频重采样上下文，因为音频设备的参数是固定的，所以需要重采样（参数设置，例如采样率，采样格式，双声道）
     struct SwrContext *audio_swr_ctx;
+    
     //解码后的视频帧队列
     VideoPicture    pictq[VIDEO_PICTURE_QUEUE_SIZE];
     //pictq_size：解码后的队列大小，pictq_rindex：取的位置，pictq_windex：存的位置
@@ -164,6 +169,7 @@ VideoState *global_video_state;
  memset函数:将某一块内存中的内容全部设置为指定的值， 这个函数通常为新申请的内存做初始化工作。
  extern void *memset(void *buffer, int c, int count) buffer：为指针或是数组,c：是赋给buffer的值,count：是buffer的长度.
  */
+//初始化队列
 void packet_queue_init(PacketQueue *q) {
     memset(q, 0, sizeof(PacketQueue));
     q->mutex = SDL_CreateMutex();
@@ -417,10 +423,13 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                  1);
                  */
                 data_size = 2 * is->audio_frame.nb_samples * 2;
+                assert(data_size <= buf_size);
+                
+                /*
                 if (data_size <= buf_size) {
                     return -1;
                 }
-                
+                 */
                 /*
                  int swr_convert(struct SwrContext *s, uint8_t **out, int out_count, const uint8_t **in, int in_count);
                  参数1：音频重采样的上下文
@@ -482,6 +491,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     int len1, audio_size;
     double pts;
     
+    //SDL 2.0 使用SDL_memset()将stream中的数据设置为0。
     SDL_memset(stream, 0, len);
     
     while(len > 0) {
@@ -915,7 +925,7 @@ int stream_component_open(VideoState *is, int stream_index) {
                                                                       NULL);
             fprintf(stderr, "swr opts: out_channel_layout:%lld, out_sample_fmt:%d, out_sample_rate:%d, in_channel_layout:%lld, in_sample_fmt:%d, in_sample_rate:%d",
                     out_channel_layout, AV_SAMPLE_FMT_S16, out_sample_rate, in_channel_layout, is->audio_ctx->sample_fmt, is->audio_ctx->sample_rate);
-            
+
             is->audio_swr_ctx = audio_convert_ctx;
             //开始播放
             SDL_PauseAudio(0);
@@ -1145,6 +1155,6 @@ int media_player(char *url){
                 break;
         }
     }
-    
+
     return 0;
 }
