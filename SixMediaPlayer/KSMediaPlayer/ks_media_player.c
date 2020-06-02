@@ -579,7 +579,7 @@ void video_refresh_timer(void *userdata) {
             schedule_refresh(is, (int)(actual_delay * 1000 + 0.5));
             
             /* show the picture! */
-             //展示当前帧
+            //展示当前帧
             video_display(is);
             
             /* update queue for next picture! */
