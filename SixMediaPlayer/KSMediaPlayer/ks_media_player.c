@@ -124,9 +124,6 @@ enum {
     AV_SYNC_EXTERNAL_MASTER,
 };
 
-FILE *yuvfd = NULL;
-FILE *audiofd = NULL;
-
 /* Since we only have one decoding thread, the Big Struct
  can be global in case we need it. */
 VideoState *global_video_state;
@@ -334,8 +331,8 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                             (const uint8_t **)is->audio_frame.data,
                             is->audio_frame.nb_samples);
                 
-                fwrite(audio_buf, 1, data_size, audiofd);
-                //memcpy(audio_buf, is->audio_frame.data[0], data_size);
+                //fwrite(audio_buf, 1, data_size, audiofd);
+                memcpy(audio_buf, is->audio_frame.data[0], data_size);
             }
             is->audio_pkt_data += len1;
             is->audio_pkt_size -= len1;
@@ -926,8 +923,6 @@ int media_player(char *url){
         exit(1);
     }
     
-    yuvfd = fopen("testout.yuv", "wb+");
-    audiofd = fopen("testout.pcm", "wb+");
     // Register all formats and codecs
     av_register_all();
     
@@ -971,8 +966,5 @@ int media_player(char *url){
         }
     }
     
-    fclose(yuvfd);
-    fclose(audiofd);
     return 0;
-    
 }
