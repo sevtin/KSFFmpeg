@@ -21,6 +21,7 @@
 #define av_frame_free avcodec_free_frame
 #endif
 
+/* 音频缓存区大小*/
 #define SDL_AUDIO_BUFFER_SIZE 1024
 #define MAX_AUDIO_FRAME_SIZE 192000 //channels(2) * data_size(2) * sample_rate(48000)
 
@@ -28,6 +29,7 @@
 #define MAX_VIDEOQ_SIZE (5 * 256 * 1024)
 
 #define AV_SYNC_THRESHOLD 0.01
+/* 同步阈值。如果误差太大，则不进行校正，也不丢帧来做同步了 */
 #define AV_NOSYNC_THRESHOLD 10.0
 
 #define SAMPLE_CORRECTION_PERCENT_MAX 10
@@ -71,6 +73,7 @@ typedef struct VideoState {
     
     //sync
     int             av_sync_type;
+    //外部时钟
     double          external_clock; /* external clock base */
     int64_t         external_clock_time;
     
@@ -154,8 +157,13 @@ enum {
 
 /* Since we only have one decoding thread, the Big Struct
  can be global in case we need it. */
+/* 全局视频状态管理 */
 VideoState *global_video_state;
 
+/*
+ memset函数:将某一块内存中的内容全部设置为指定的值， 这个函数通常为新申请的内存做初始化工作。
+ extern void *memset(void *buffer, int c, int count) buffer：为指针或是数组,c：是赋给buffer的值,count：是buffer的长度.
+ */
 void packet_queue_init(PacketQueue *q) {
     memset(q, 0, sizeof(PacketQueue));
     q->mutex = SDL_CreateMutex();
@@ -170,6 +178,10 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     if(av_dup_packet(pkt) < 0) {
         return -1;
     }
+    /*
+     int av_dup_packet(AVPacket *pkt);
+     复制src->data引用的数据缓存，赋值给dst。也就是创建两个独立packet，这个功能现在可用使用函数av_packet_ref来代替
+     */
     //分配空间
     pkt1 = av_malloc(sizeof(AVPacketList));
     if (!pkt1)
@@ -205,10 +217,11 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
     AVPacketList *pkt1;
     int ret;
     
+    /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(q->mutex);
     
     for(;;) {
-        
+        /* 是否退出 */
         if(global_video_state->quit) {
             ret = -1;
             break;
@@ -237,10 +250,11 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
         } else {
             //如果没有取到数据，加锁等待
             //这里的实现：先解锁->发送信号->再加锁，SDL_CondWait需要在所中间做
+            /* SDL_CondWait :等待(线程阻塞) */
             SDL_CondWait(q->cond, q->mutex);
         }
     }
-    //解锁
+    /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(q->mutex);
     return ret;
 }
@@ -250,18 +264,23 @@ double get_audio_clock(VideoState *is) {
     int hw_buf_size, bytes_per_sec, n;
     
     pts = is->audio_clock; /* maintained in the audio thread */
+    /* 缓存大小 - index*/
     hw_buf_size = is->audio_buf_size - is->audio_buf_index;
     bytes_per_sec = 0;
     n = is->audio_ctx->channels * 2;
+    /* 判断是否有音频流 */
     if(is->audio_st) {
+        /* is->audio_ctx->sample_rate:采样率 */
         bytes_per_sec = is->audio_ctx->sample_rate * n;
     }
+    /* 计算播放时间 */
     if(bytes_per_sec) {
         pts -= (double)hw_buf_size / bytes_per_sec;
     }
     return pts;
 }
 
+/* 获取视屏时钟*/
 double get_video_clock(VideoState *is) {
     double delta;
     
@@ -269,16 +288,21 @@ double get_video_clock(VideoState *is) {
     return is->video_current_pts + delta;
 }
 
+/* 获取外部时钟 */
 double get_external_clock(VideoState *is) {
     return av_gettime() / 1000000.0;
 }
 
+/* 主时钟 */
 double get_master_clock(VideoState *is) {
     if(is->av_sync_type == AV_SYNC_VIDEO_MASTER) {
+        /* 视屏帧同步方案 */
         return get_video_clock(is);
     } else if(is->av_sync_type == AV_SYNC_AUDIO_MASTER) {
+        /* 音频同步方案 */
         return get_audio_clock(is);
     } else {
+        /* 外部时钟同步方案 */
         return get_external_clock(is);
     }
 }
@@ -293,22 +317,29 @@ int synchronize_audio(VideoState *is, short *samples,
     
     n = 2 * is->audio_ctx->channels;
     
+    /* 非音频同步方案 */
     if(is->av_sync_type != AV_SYNC_AUDIO_MASTER) {
         double diff, avg_diff;
         int wanted_size, min_size, max_size /*, nb_samples */;
-        
+        /* 获取时钟 */
         ref_clock = get_master_clock(is);
+        /* 音频时钟 - 主时钟*/
         diff = get_audio_clock(is) - ref_clock;
         
+        /* 声音时钟和视频时钟的差异在我们的阀值范围内 */
         if(diff < AV_NOSYNC_THRESHOLD) {
             // accumulate the diffs
-            is->audio_diff_cum = diff + is->audio_diff_avg_coef
-            * is->audio_diff_cum;
+            /* 用公式diff_sum=new_diff+diff_sum*c来计算差异 */
+            is->audio_diff_cum = diff + is->audio_diff_avg_coef * is->audio_diff_cum;
+            /* 音频差异平均计数*/
             if(is->audio_diff_avg_count < AUDIO_DIFF_AVG_NB) {
                 is->audio_diff_avg_count++;
             } else {
+                /* 当准备好去找平均差异的时候，我们用简单的计算方式：avg_diff=diff_sum*(1-c)来平均差异 */
                 avg_diff = is->audio_diff_cum * (1.0 - is->audio_diff_avg_coef);
+                /* 音频现在时钟大于视频现在时钟 */
                 if(fabs(avg_diff) >= is->audio_diff_threshold) {
+                    /* 记住audio_length*(sample_rate）*channels*2就是audio_length秒时间的样本数。*/
                     wanted_size = samples_size + ((int)(diff * is->audio_ctx->sample_rate) * n);
                     min_size = samples_size * ((100 - SAMPLE_CORRECTION_PERCENT_MAX) / 100);
                     max_size = samples_size * ((100 + SAMPLE_CORRECTION_PERCENT_MAX) / 100);
@@ -339,6 +370,7 @@ int synchronize_audio(VideoState *is, short *samples,
             }
         } else {
             /* difference is TOO big; reset diff stuff */
+            /* 声音时钟和视频时钟的差异大于我们的阀值。失去同步 */
             is->audio_diff_avg_count = 0;
             is->audio_diff_cum = 0;
         }
@@ -346,6 +378,7 @@ int synchronize_audio(VideoState *is, short *samples,
     return samples_size;
 }
 
+//音频解码
 int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double *pts_ptr) {
     
     int len1, data_size = 0;
@@ -358,6 +391,14 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
         while(is->audio_pkt_size > 0) {
             //有未解码的数据
             int got_frame = 0;
+            
+            /*音频解码: int avcodec_decode_audio4(AVCodecContext *avctx, AVFrame *frame, int *got_frame_ptr, const AVPacket *avpkt);
+             *@param avctx 编解码器上下文
+              *@param [out] frame用于存储解码音频样本的AVFrame
+              *@param [out] got_frame_ptr如果没有帧可以解码则为零，否则为非零
+              *@param [in] avpkt包含输入缓冲区的输入AVPacket
+              *@return 如果在解码期间发生错误，则返回否定错误代码，否则返回从输入AVPacket消耗的字节数。
+             */
             //取出一个音频包，进行解码
             len1 = avcodec_decode_audio4(is->audio_ctx, &is->audio_frame, &got_frame, pkt);
             if(len1 < 0) {
@@ -379,6 +420,15 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 if (data_size <= buf_size) {
                     return -1;
                 }
+                
+                /*
+                 int swr_convert(struct SwrContext *s, uint8_t **out, int out_count, const uint8_t **in, int in_count);
+                 参数1：音频重采样的上下文
+                 参数2：输出的指针。传递的输出的数组
+                 参数3：输出的样本数量，不是字节数。单通道的样本数量。
+                 参数4：输入的数组，AVFrame解码出来的DATA
+                 参数5：输入的单通道的样本数量。
+                 */
                 //重采样，转成声卡识别的声音
                 swr_convert(is->audio_swr_ctx,
                             &audio_buf,
@@ -449,6 +499,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
                 is->audio_buf_size = 1024 * 2 * 2;
                 memset(is->audio_buf, 0, is->audio_buf_size);
             } else {
+                /* 同步音频 */
                 audio_size = synchronize_audio(is, (int16_t *)is->audio_buf,
                                                audio_size, pts);
                 is->audio_buf_size = audio_size;
@@ -461,6 +512,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
         if(len1 > len)
             len1 = len;//如果解码数据大，则使用缓冲区的数据
         
+        /* 对音频数据进行混音，不要直接用memcpy。否则声音会失真 */
         SDL_MixAudio(stream,(uint8_t *)is->audio_buf + is->audio_buf_index, len1, SDL_MIX_MAXVOLUME);
         //memcpy(stream, (uint8_t *)is->audio_buf + is->audio_buf_index, len1);//将解码后audio_buf的数据拷贝到stream中去
         len -= len1;
@@ -469,6 +521,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     }
 }
 
+/* 刷新事件 */
 static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque) {
     SDL_Event event;
     event.type = FF_REFRESH_EVENT;
@@ -478,11 +531,13 @@ static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque) {
 }
 
 /* schedule a video refresh in 'delay' ms */
+/* 延迟刷新 */
 static void schedule_refresh(VideoState *is, int delay) {
     //触发主线程
     SDL_AddTimer(delay, sdl_refresh_timer_cb, is);
 }
 
+/* SDL 显示YUV数据 */
 void video_display(VideoState *is) {
     
     SDL_Rect rect;
@@ -519,6 +574,7 @@ void video_refresh_timer(void *userdata) {
     VideoPicture *vp;
     double actual_delay, delay, sync_threshold, ref_clock, diff;
     
+    /* 存在视屏流 */
     if(is->video_st) {
         //视频解码数据为0,则递归查询数据
         if(is->pictq_size == 0) {
@@ -635,11 +691,14 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
     VideoPicture *vp;
     
     /* wait until we have space for a new pic */
+    /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(is->pictq_mutex);
     while(is->pictq_size >= VIDEO_PICTURE_QUEUE_SIZE &&
           !is->quit) {
+        /* SDL_CondWait :等待(线程阻塞) */
         SDL_CondWait(is->pictq_cond, is->pictq_mutex);
     }
+    /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(is->pictq_mutex);
     
     if(is->quit)
@@ -693,6 +752,7 @@ double synchronize_video(VideoState *is, AVFrame *src_frame, double pts) {
     
     if(pts != 0) {
         /* if we have pts, set video clock to it */
+        /* 如果我们有显示时间，就设置视频时钟 */
         is->video_clock = pts;
     } else {
         /* if we aren't given a pts, set it to the clock */
@@ -732,6 +792,7 @@ int decode_video_thread(void *arg) {
         // Decode video frame
         avcodec_decode_video2(is->video_ctx, pFrame, &frameFinished, packet);
         //av_frame_get_best_effort_timestamp(pFrame)：获取做合适的pts
+        /* 对解码后的AVFrame使用av_frame_get_best_effort_timestamp可以获取PTS */
         if((pts = av_frame_get_best_effort_timestamp(pFrame)) != AV_NOPTS_VALUE) {
         } else {
             pts = 0;
@@ -768,7 +829,7 @@ int stream_component_open(VideoState *is, int stream_index) {
     
     codecCtx = avcodec_alloc_context3(NULL);
     
-    
+    /* 将AVCodecContext的成员复制到AVCodecParameters结构体*/
     int ret = avcodec_parameters_to_context(codecCtx, pFormatCtx->streams[stream_index]->codecpar);
     if (ret < 0)
         return -1;
@@ -778,7 +839,6 @@ int stream_component_open(VideoState *is, int stream_index) {
         fprintf(stderr, "Unsupported codec!\n");
         return -1;
     }
-    
     
     if(codecCtx->codec_type == AVMEDIA_TYPE_AUDIO) {
         
