@@ -122,7 +122,7 @@ typedef struct VideoState {
     PacketQueue     videoq;
     //视频裁剪上下文
     struct SwsContext *video_sws_ctx;
-    //音频重采样上下文，因为音频设备的参数是固定的，所以需要重采样
+    //音频重采样上下文，因为音频设备的参数是固定的，所以需要重采样（参数设置，例如采样率，采样格式，双声道）
     struct SwrContext *audio_swr_ctx;
     //解码后的视频帧队列
     VideoPicture    pictq[VIDEO_PICTURE_QUEUE_SIZE];
@@ -333,9 +333,11 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
     
     for(;;) {
         while(is->audio_pkt_size > 0) {
+            //有未解码的数据
             int got_frame = 0;
             len1 = avcodec_decode_audio4(is->audio_ctx, &is->audio_frame, &got_frame, pkt);
             if(len1 < 0) {
+                //解码失败
                 /* if error, skip frame */
                 is->audio_pkt_size = 0;
                 break;
@@ -353,6 +355,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 if (data_size <= buf_size) {
                     return -1;
                 }
+                //转成声卡识别的声音
                 swr_convert(is->audio_swr_ctx,
                             &audio_buf,
                             MAX_AUDIO_FRAME_SIZE*3/2,
@@ -362,7 +365,9 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 //fwrite(audio_buf, 1, data_size, audiofd);
                 memcpy(audio_buf, is->audio_frame.data[0], data_size);
             }
+            //更新音频数据大小
             is->audio_pkt_data += len1;
+            //减去已经解码的音频长度
             is->audio_pkt_size -= len1;
             if(data_size <= 0) {
                 /* No data yet, get more frames */
@@ -384,6 +389,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
         }
         /* next packet */
         if(packet_queue_get(&is->audioq, pkt, 1) < 0) {
+            //当音频队列中没有数据时，退出
             return -1;
         }
         is->audio_pkt_data = pkt->data;
@@ -394,7 +400,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
         }
     }
 }
-
+//userdata：需要解码的数据，stream：声卡驱动的缓冲区，的一个地址，len：需要的长度，stream的大小
 void audio_callback(void *userdata, Uint8 *stream, int len) {
     
     VideoState *is = (VideoState *)userdata;
@@ -404,11 +410,16 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
     SDL_memset(stream, 0, len);
     
     while(len > 0) {
+        //声卡驱动的缓冲区空间 > 0
         if(is->audio_buf_index >= is->audio_buf_size) {
+            //audio_buf_index >= audio_buf_size：缓冲区已经没有数据
+            
             /* We have already sent all our data; get more */
+            //音频解码，解码成功后会拿到解码后数据的大小
             audio_size = audio_decode_frame(is, is->audio_buf, sizeof(is->audio_buf), &pts);
             if(audio_size < 0) {
                 /* If error, output silence */
+                //解码失败后，加一个静默音
                 is->audio_buf_size = 1024 * 2 * 2;
                 memset(is->audio_buf, 0, is->audio_buf_size);
             } else {
@@ -422,7 +433,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
         if(len1 > len)
             len1 = len;
         SDL_MixAudio(stream,(uint8_t *)is->audio_buf + is->audio_buf_index, len1, SDL_MIX_MAXVOLUME);
-        //memcpy(stream, (uint8_t *)is->audio_buf + is->audio_buf_index, len1);
+        //memcpy(stream, (uint8_t *)is->audio_buf + is->audio_buf_index, len1);//将解码后audio_buf的数据拷贝到stream中去
         len -= len1;
         stream += len1;
         is->audio_buf_index += len1;
@@ -721,6 +732,7 @@ int stream_component_open(VideoState *is, int stream_index) {
     if(codecCtx->codec_type == AVMEDIA_TYPE_AUDIO) {
         
         // Set audio settings from codec info
+        //设置想要的音频播放参数
         wanted_spec.freq = codecCtx->sample_rate;
         wanted_spec.format = AUDIO_S16SYS;
         wanted_spec.channels = 2;//codecCtx->channels;
@@ -732,6 +744,7 @@ int stream_component_open(VideoState *is, int stream_index) {
         fprintf(stderr, "wanted spec: channels:%d, sample_fmt:%d, sample_rate:%d \n",
                 2, AUDIO_S16SYS, codecCtx->sample_rate);
         
+        //打开音频设备
         if(SDL_OpenAudio(&wanted_spec, &spec) < 0) {
             fprintf(stderr, "SDL_OpenAudio: %s\n", SDL_GetError());
             return -1;
@@ -752,6 +765,7 @@ int stream_component_open(VideoState *is, int stream_index) {
             is->audio_buf_size = 0;
             is->audio_buf_index = 0;
             memset(&is->audio_pkt, 0, sizeof(is->audio_pkt));
+            //初始化音频队列，读取音频包后不是马上解码，而是存储到音频队列中，当声卡需要数据的时候，调用回调函数，回调函数再从队列中取出一个个音频包，再进行解码，解码后的数据再拷贝到音频驱动中去
             packet_queue_init(&is->audioq);
             
             //Out Audio Param
@@ -775,6 +789,7 @@ int stream_component_open(VideoState *is, int stream_index) {
             //uint8_t *out_buffer=(uint8_t *)av_malloc(MAX_AUDIO_FRAME_SIZE*2);
             int64_t in_channel_layout=av_get_default_channel_layout(is->audio_ctx->channels);
             
+            //进行音频重采样，确保正常输出
             struct SwrContext *audio_convert_ctx = swr_alloc_set_opts(NULL,
                                                                       out_channel_layout,
                                                                       AV_SAMPLE_FMT_S16,
@@ -788,7 +803,7 @@ int stream_component_open(VideoState *is, int stream_index) {
                     out_channel_layout, AV_SAMPLE_FMT_S16, out_sample_rate, in_channel_layout, is->audio_ctx->sample_fmt, is->audio_ctx->sample_rate);
             
             is->audio_swr_ctx = audio_convert_ctx;
-            
+            //开始播放
             SDL_PauseAudio(0);
             break;
         case AVMEDIA_TYPE_VIDEO:
