@@ -530,39 +530,52 @@ void video_refresh_timer(void *userdata) {
             
             is->video_current_pts = vp->pts;
             is->video_current_pts_time = av_gettime();
+            //vp->pts：当前帧的pts
             delay = vp->pts - is->frame_last_pts; /* the pts from last time */
             if(delay <= 0 || delay >= 1.0) {
+                //小于0，或者大于1秒，判定为错误
                 /* if incorrect delay, use previous one */
+                //设置为上一帧的delay，设置一个默认值
                 delay = is->frame_last_delay;
             }
             /* save for next time */
+            // 更新delay和pts
             is->frame_last_delay = delay;
             is->frame_last_pts = vp->pts;//更新展示pts的值
             
             /* update delay to sync to audio if not master source */
             if(is->av_sync_type != AV_SYNC_VIDEO_MASTER) {
+                //获取播放音频参考时间
                 ref_clock = get_master_clock(is);
+                //解码后的pts - 参考时间，从而判断是否展示视频帧，diff：音频与视频的时间差值
                 diff = vp->pts - ref_clock;
                 
                 /* Skip or repeat the frame. Take delay into account
                  FFPlay still doesn't "know if this is the best guess." */
+                //如果delay时间大于阈值，则取最大值。sync_threshold同步阈值：代表多长时间刷新一次视频帧
                 sync_threshold = (delay > AV_SYNC_THRESHOLD) ? delay : AV_SYNC_THRESHOLD;
                 if(fabs(diff) < AV_NOSYNC_THRESHOLD) {
                     if(diff <= -sync_threshold) {
+                        //视频时间是在音频时间之前，需要快播
                         delay = 0;
                     } else if(diff >= sync_threshold) {
+                        //视频和音频的阈值diff >= 我们设置的阈值sync_threshold，代表视频要展示的时间远远未到，这时等待时间加长，*2倍
                         delay = 2 * delay;
                     }
                 }
             }
+            //系统时间+delay
             is->frame_timer += delay;
             /* computer the REAL delay */
+            //系统时间 - 当前时间 = 等待时间
             actual_delay = is->frame_timer - (av_gettime() / 1000000.0);
             if(actual_delay < 0.010) {
+                //小于10毫秒
                 /* Really it should skip the picture instead */
                 actual_delay = 0.010;
             }
             //递归X毫秒播一帧
+            //下次刷新的时间 = 等待时间 + 0.5的微差值
             schedule_refresh(is, (int)(actual_delay * 1000 + 0.5));
             
             /* show the picture! */
@@ -852,6 +865,7 @@ int stream_component_open(VideoState *is, int stream_index) {
             is->video_st = pFormatCtx->streams[stream_index];
             is->video_ctx = codecCtx;
             
+            //获取系统时间！！！
             is->frame_timer = (double)av_gettime() / 1000000.0;
             is->frame_last_delay = 40e-3;
             is->video_current_pts_time = av_gettime();
