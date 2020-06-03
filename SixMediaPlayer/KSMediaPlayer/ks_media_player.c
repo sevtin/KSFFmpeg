@@ -615,7 +615,7 @@ void video_refresh_timer(void *userdata) {
             //vp->pts：当前帧的pts
             delay = vp->pts - is->frame_last_pts; /* the pts from last time */
             if(delay <= 0 || delay >= 1.0) {
-                //小于0，或者大于1秒，判定为错误
+                //延迟小于0，或者大于1秒，判定为错误
                 /* if incorrect delay, use previous one */
                 //设置为上一帧的delay，设置一个默认值
                 delay = is->frame_last_delay;
@@ -709,7 +709,6 @@ void alloc_picture(void *userdata) {
     vp->width = is->video_ctx->width;
     vp->height = is->video_ctx->height;
     vp->allocated = 1;
-    
 }
 
 int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
@@ -719,21 +718,23 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
     /* wait until we have space for a new pic */
     /* SDL_LockMutex :互斥锁(加锁) */
     SDL_LockMutex(is->pictq_mutex);
-    while(is->pictq_size >= VIDEO_PICTURE_QUEUE_SIZE &&
-          !is->quit) {
+    while(is->pictq_size >= VIDEO_PICTURE_QUEUE_SIZE && !is->quit) {
         /* SDL_CondWait :等待(线程阻塞) */
         SDL_CondWait(is->pictq_cond, is->pictq_mutex);
     }
     /* SDL_UnlockMutex : 互斥锁(解锁) */
     SDL_UnlockMutex(is->pictq_mutex);
     
-    if(is->quit)
+    if(is->quit){
         return -1;
+    }
     
     // windex is set to 0 initially
+    //取出解码后的数据
     vp = &is->pictq[is->pictq_windex];
     
     /* allocate or resize the buffer! */
+    //这里没有对视屏分辨率中途修改做处理！！！
     if(!vp->bmp ||
        vp->width != is->video_ctx->width ||
        vp->height != is->video_ctx->height) {
@@ -751,7 +752,7 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
         vp->pts = pts;
         
         // Convert the image into YUV format that SDL uses
-        //进行缩放，并将解码后的YUV数据放入AVPicture *bmp中
+        //进行缩放，并将解码后的YUV数据放入AVPicture *bmp中，同时回调给调用
         sws_scale(is->video_sws_ctx,
                   (uint8_t const * const *)pFrame->data,
                   pFrame->linesize,
@@ -766,6 +767,7 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts) {
         }
         
         SDL_LockMutex(is->pictq_mutex);
+        //更新解码后的队列大小
         is->pictq_size++;
         SDL_UnlockMutex(is->pictq_mutex);
     }
