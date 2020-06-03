@@ -15,6 +15,7 @@
 #include "libswscale/swscale.h"
 #include "libswresample/swresample.h"
 #include "libavutil/time.h"
+#include "libavutil/avstring.h"
 #include "SDL2/SDL.h"
 
 // compatibility with newer API
@@ -800,6 +801,7 @@ double synchronize_video(VideoState *is, AVFrame *src_frame, double pts) {
 
 //视频解码线程
 int decode_video_thread(void *arg) {
+    
     VideoState *is = (VideoState *)arg;
     AVPacket pkt1, *packet = &pkt1;
     int frameFinished;
