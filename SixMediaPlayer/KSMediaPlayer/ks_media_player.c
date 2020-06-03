@@ -7,6 +7,7 @@
 //
 
 #include "ks_media_player.h"
+#include <string.h>
 #include <assert.h>
 #include <math.h>
 
@@ -220,6 +221,7 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     q->nb_packets++;
     //统计每一个包的size，求和
     q->size += pkt1->pkt.size;
+    
     //发送信号，让等待的线程唤醒
     //这里的实现：条件变量先解锁->发送信号->再加锁，SDL_CondSignal需要在锁中间做
     SDL_CondSignal(q->cond);
@@ -962,7 +964,7 @@ int stream_component_open(VideoState *is, int stream_index) {
             is->video_current_pts_time = av_gettime();
             
             packet_queue_init(&is->videoq);
-            //图像裁剪
+            //图像裁剪(注意sws_getContext只能调用一次)
             is->video_sws_ctx = sws_getContext(is->video_ctx->width,//原始宽
                                                is->video_ctx->height,//原始高
                                                is->video_ctx->pix_fmt,
@@ -1119,6 +1121,12 @@ fail:
 }
 
 void free_resource() {
+
+    if (global_video_state->pFormatCtx) {
+        //内部调用avformat_free_context
+        avformat_close_input(&global_video_state->pFormatCtx);
+    }
+    
     if (global_video_state->video_sws_ctx) {
         sws_freeContext(global_video_state->video_sws_ctx);
     }
@@ -1127,19 +1135,39 @@ void free_resource() {
         swr_free(&global_video_state->audio_swr_ctx);
     }
     
+    SDL_DestroyWindow(win);
+    win = NULL;
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(texture);
     SDL_Quit();
     
+    SDL_DestroyMutex(text_mutex);
+    SDL_DestroyCond(global_video_state->pictq_cond);
+    SDL_DestroyMutex(global_video_state->pictq_mutex);
+    
+
     if (global_video_state->audio_ctx) {
         avcodec_close(global_video_state->audio_ctx);
+        avcodec_free_context(&global_video_state->audio_ctx);
     }
     
     if (global_video_state->video_ctx) {
         avcodec_close(global_video_state->video_ctx);
+        avcodec_free_context(&global_video_state->video_ctx);
     }
     
-    if (global_video_state->pFormatCtx) {
-        avformat_close_input(&global_video_state->pFormatCtx);
-    }
+    //test
+    /*
+     avpicture_free(AVPicture *picture);
+     memset(void *b, int c, size_t len);//数组清零
+     
+     void av_packet_unref(AVPacket *pkt);
+     void av_free_packet(AVPacket *pkt);
+     
+     av_frame_free(AVFrame **frame);
+     
+     void av_freep(void *ptr);
+    */
 }
 
 int media_player(char *url){
@@ -1191,7 +1219,8 @@ int media_player(char *url){
             case FF_QUIT_EVENT:
             case SDL_QUIT:
                 is->quit = 1;
-                SDL_Quit();
+                //SDL_Quit();
+                free_resource();
                 return 0;
                 break;
             case FF_REFRESH_EVENT:
