@@ -4,7 +4,7 @@
 //
 //  Created by saeipi on 2020/6/1.
 //  Copyright © 2020 saeipi. All rights reserved.
-//
+//  李超笔记:http://www.imooc.com/article/91381
 
 #import "ViewController.h"
 #include "ks_media_player.h"

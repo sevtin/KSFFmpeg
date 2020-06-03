@@ -120,9 +120,9 @@ typedef struct VideoState {
     AVFrame         audio_frame;
     //解码之前的音频包（可能包含多个视频帧或者音频帧）
     AVPacket        audio_pkt;
-    //解码前音频包数据的指针
+    //解码前音频包数据的指针(单个包)
     uint8_t         *audio_pkt_data;
-    //解码后音频数据大小
+    //解码后音频数据大小(单个包)
     int             audio_pkt_size;
     //视乎没有用到？？？
     int             audio_hw_buf_size;
@@ -409,7 +409,6 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
     double pts;
     int n;
     
-    
     for(;;) {
         while(is->audio_pkt_size > 0) {
             //有未解码的数据
@@ -496,7 +495,9 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
         is->audio_pkt_data = pkt->data;
         is->audio_pkt_size = pkt->size;
         /* if update, update the audio clock w/pts */
+        //展示时间:未定义的时间戳值
         if(pkt->pts != AV_NOPTS_VALUE) {
+            /* timestamp(秒) = pts * av_q2d(time_base):将不同时间基的值转成按秒为单位的值计算 */
             is->audio_clock = av_q2d(is->audio_st->time_base)*pkt->pts;
         }
     }
@@ -527,7 +528,8 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
                 memset(is->audio_buf, 0, is->audio_buf_size);
             } else {
                 /* 同步音频 */
-                audio_size = synchronize_audio(is, (int16_t *)is->audio_buf,
+                audio_size = synchronize_audio(is,
+                                               (int16_t *)is->audio_buf,
                                                audio_size, pts);
                 is->audio_buf_size = audio_size;
             }
@@ -569,10 +571,7 @@ void video_display(VideoState *is) {
     
     SDL_Rect rect;
     VideoPicture *vp;
-    float aspect_ratio;
-    int w, h, x, y;
-    int i;
-    
+
     vp = &is->pictq[is->pictq_rindex];
     if(vp->bmp) {
         
