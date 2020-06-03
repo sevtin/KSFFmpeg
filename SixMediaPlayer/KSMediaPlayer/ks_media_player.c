@@ -455,7 +455,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                  参数4：输入的数组，AVFrame解码出来的DATA
                  参数5：输入的单通道的样本数量。
                  */
-                //重采样，转成声卡识别的声音
+                //重采样，转成声卡识别的声音(重采样后audio_buf会更新)
                 swr_convert(is->audio_swr_ctx,
                             &audio_buf,
                             MAX_AUDIO_FRAME_SIZE*3/2,
