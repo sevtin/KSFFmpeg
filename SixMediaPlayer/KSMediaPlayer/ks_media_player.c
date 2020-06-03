@@ -64,7 +64,6 @@ typedef struct PacketQueue {
     SDL_cond *cond;
 } PacketQueue;
 
-
 typedef struct VideoPicture {
     AVPicture *bmp;//YUV数据
     int width, height; /* source height & width */
