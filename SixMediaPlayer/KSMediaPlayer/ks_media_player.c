@@ -14,6 +14,7 @@
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
 #include "libswresample/swresample.h"
+#include "libavutil/time.h"
 #include "SDL2/SDL.h"
 
 // compatibility with newer API
@@ -279,27 +280,33 @@ double get_audio_clock(VideoState *is) {
     double pts;
     int hw_buf_size, bytes_per_sec, n;
     
+    /* 音频正在播放的时间 0.34829931972789113 */
     pts = is->audio_clock; /* maintained in the audio thread */
-    /* 缓存大小 - index*/
+    /* 缓冲区大小 - 现在已经使用了多少字节 = 0 ?? 一直等于O */
     hw_buf_size = is->audio_buf_size - is->audio_buf_index;
     bytes_per_sec = 0;
+    /* 双声道 * 2 = 4 */
     n = is->audio_ctx->channels * 2;
     /* 判断是否有音频流 */
     if(is->audio_st) {
-        /* is->audio_ctx->sample_rate:采样率 */
+        /* is->audio_ctx->sample_rate:采样率44100 * 4 = 176400 */
         bytes_per_sec = is->audio_ctx->sample_rate * n;
     }
     /* 计算播放时间 */
     if(bytes_per_sec) {
+        /* pts -= 0 ÷ 176400 */
         pts -= (double)hw_buf_size / bytes_per_sec;
     }
+    /* 音频正在播放的时间 0.34829931972789113*/
     return pts;
 }
 
 /* 获取视屏时钟*/
 double get_video_clock(VideoState *is) {
     double delta;
-    
+    /*
+     av_gettime():获取当前时间（以微秒为单位）。
+     */
     delta = (av_gettime() - is->video_current_pts_time) / 1000000.0;
     return is->video_current_pts + delta;
 }
@@ -426,18 +433,18 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
             data_size = 0;
             if(got_frame) {
                 /*
-                 data_size = av_samples_get_buffer_size(NULL,
-                 is->audio_ctx->channels,
-                 is->audio_frame.nb_samples,
-                 is->audio_ctx->sample_fmt,
-                 1);
-                 */
+                data_size = av_samples_get_buffer_size(NULL,
+                                                       is->audio_ctx->channels,
+                                                       is->audio_frame.nb_samples,
+                                                       is->audio_ctx->sample_fmt,
+                                                       1);
+                */
+                /* 4096 = 2 * 1024 * 2 */
                 data_size = 2 * is->audio_frame.nb_samples * 2;
                 assert(data_size <= buf_size);
                 
                 /* 进行内存拷贝，按字节拷贝的 */
                 //通过audio_buf返回数据
-                //fwrite(audio_buf, 1, data_size, audiofd);
                 memcpy(audio_buf, is->audio_frame.data[0], data_size);
                 
                 /*
