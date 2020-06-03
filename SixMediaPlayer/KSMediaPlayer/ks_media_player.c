@@ -461,8 +461,8 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                             MAX_AUDIO_FRAME_SIZE*3/2,
                             (const uint8_t **)is->audio_frame.data,
                             is->audio_frame.nb_samples);
-                
             }
+            
             //更新音频数据大小
             is->audio_pkt_data += len1;
             //减去已经解码的音频长度
@@ -471,16 +471,19 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
                 /* No data yet, get more frames */
                 continue;
             }
+            
             pts = is->audio_clock;
+            //回调展示时间
             *pts_ptr = pts;
             n = 2 * is->audio_ctx->channels;
-            is->audio_clock += (double)data_size /
-            (double)(n * is->audio_ctx->sample_rate);
+            /* is->audio_clock += data_size:4096 + (n:4 * is->audio_ctx->sample_rate:44100)*/
+            is->audio_clock += (double)data_size / (double)(n * is->audio_ctx->sample_rate);
             /* We have data, return it and come back for more later */
             return data_size;
         }
-        if(pkt->data)
+        if(pkt->data) {
             av_free_packet(pkt);
+        }
         
         if(is->quit) {
             return -1;
