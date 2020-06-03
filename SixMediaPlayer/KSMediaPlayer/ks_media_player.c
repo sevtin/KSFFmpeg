@@ -43,6 +43,12 @@
 
 #define DEFAULT_AV_SYNC_TYPE AV_SYNC_AUDIO_MASTER //AV_SYNC_VIDEO_MASTER
 
+/*
+ typedef struct AVPacketList {
+     AVPacket pkt;
+     struct AVPacketList *next;
+ } AVPacketList;
+ */
 typedef struct PacketQueue {
     //队列头，队列尾
     AVPacketList *first_pkt, *last_pkt;
@@ -214,7 +220,7 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     //统计每一个包的size，求和
     q->size += pkt1->pkt.size;
     //发送信号，让等待的线程唤醒
-    //这里的实现：条件变量先解锁->发送信号->再加锁，SDL_CondSignal需要在所中间做
+    //这里的实现：条件变量先解锁->发送信号->再加锁，SDL_CondSignal需要在锁中间做
     SDL_CondSignal(q->cond);
     //解锁
     SDL_UnlockMutex(q->mutex);
@@ -241,9 +247,9 @@ int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
         if (pkt1) {
             //更新队列头的指针
             q->first_pkt = pkt1->next;
-            if (!q->first_pkt)
+            if (!q->first_pkt){
                 q->last_pkt = NULL;//队列已经空了
-            
+            }
             //元素个数减1
             q->nb_packets--;
             //减去出队列包数据大小
