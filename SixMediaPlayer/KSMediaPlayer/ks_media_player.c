@@ -1135,17 +1135,6 @@ void free_resource() {
         swr_free(&global_video_state->audio_swr_ctx);
     }
     
-    SDL_DestroyWindow(win);
-    win = NULL;
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyTexture(texture);
-    SDL_Quit();
-    
-    SDL_DestroyMutex(text_mutex);
-    SDL_DestroyCond(global_video_state->pictq_cond);
-    SDL_DestroyMutex(global_video_state->pictq_mutex);
-    
-
     if (global_video_state->audio_ctx) {
         avcodec_close(global_video_state->audio_ctx);
         avcodec_free_context(&global_video_state->audio_ctx);
@@ -1156,6 +1145,16 @@ void free_resource() {
         avcodec_free_context(&global_video_state->video_ctx);
     }
     
+    SDL_DestroyWindow(win);
+    win = NULL;
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(texture);
+    SDL_Quit();
+    
+    SDL_DestroyMutex(text_mutex);
+    SDL_DestroyCond(global_video_state->pictq_cond);
+    SDL_DestroyMutex(global_video_state->pictq_mutex);
+
     //test
     /*
      avpicture_free(AVPicture *picture);
