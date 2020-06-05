@@ -527,6 +527,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len) {
                 /* If error, output silence */
                 //解码失败后，加一个静默音
                 is->audio_buf_size = 1024 * 2 * 2;
+                //void *memset(void *b, int c, size_t len) : 数组清0
                 memset(is->audio_buf, 0, is->audio_buf_size);
             } else {
                 /* 同步音频 */
@@ -924,11 +925,11 @@ int stream_component_open(VideoState *is, int stream_index) {
             int out_channels=av_get_channel_layout_nb_channels(out_channel_layout);
             //Out Buffer Size
             /*
-             int out_buffer_size=av_samples_get_buffer_size(NULL,
-             out_channels,
-             out_nb_samples,
-             AV_SAMPLE_FMT_S16,
-             1);
+            int out_buffer_size=av_samples_get_buffer_size(NULL,
+                                                           out_channels,
+                                                           out_nb_samples,
+                                                           AV_SAMPLE_FMT_S16,
+                                                           1);
              */
             
             //uint8_t *out_buffer=(uint8_t *)av_malloc(MAX_AUDIO_FRAME_SIZE*2);
