@@ -35,13 +35,28 @@ static int decode(AVCodecContext *dec_ctx, AVFrame *frame,AVPacket *pkt,const ch
     char buf[1024];
     int ret;
     
+    //将带有压缩数据的数据包发送到解码器(发送数据到ffmepg，放到解码队列中)
     ret = avcodec_send_packet(dec_ctx, pkt);
     if (ret < 0) {
         fprintf(stderr, "Error sending a packet for decoding\n");
         return ret;
     }
     
+    //读取所有输出帧（通常可以有任意数量的输出帧）
     while (ret >= 0) {
+        /*
+         从解码器中获取解码的输出数据(将成功的解码队列中取出1个frame  (如果失败会返回０）)
+         @参数 avctx 编码上下文
+         @参数 frame 这将会指向从解码器分配的一个引用计数的视频或者音频帧（取决于解码类型）
+         @注意该函数在处理其他事情之前会调用av_frame_unref(frame)
+
+         @返回值
+         0：成功，返回一帧数据
+         AVERROR(EAGAIN)：当前输出无效，用户必须发送新的输入
+         AVERROR_EOF：解码器已经完全刷新，当前没有多余的帧可以输出
+         AVERROR(EINVAL)：解码器没有被打开，或者它是一个编码器
+         其他负值：对应其他的解码错误
+         */
         ret = avcodec_receive_frame(dec_ctx, frame);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
             return -1;
@@ -61,5 +76,117 @@ static int decode(AVCodecContext *dec_ctx, AVFrame *frame,AVPacket *pkt,const ch
         snprintf(buf, sizeof(buf), "%s-%d", filename, dec_ctx->frame_number);
         pgm_save(frame->data[0], frame->linesize[0], frame->width, frame->height, buf);
     }
+    return 0;
+}
+
+int decode_video_port(char *inurl,char *outurl) {
+    const char *filename,*outfilename;
+    const AVCodec *codec;
+    AVCodecParserContext *parser;
+    AVCodecContext *dec_ctx;
+    FILE *file;
+    AVFrame *frame;
+    uint8_t inbuf[INBUF_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
+    uint8_t *data;
+    size_t data_size;
+    int ret;
+    AVPacket *pkt;
+    
+    if (!inurl || !outurl) {
+        return -1;
+    }
+    
+    filename = inurl;
+    outfilename = outurl;
+    
+    pkt = av_packet_alloc();
+    if (!pkt) {
+        return -1;
+    }
+    
+     /* set end of buffer to 0 (this ensures that no overreading happens for damaged MPEG streams) */
+    memset(inbuf + INBUF_SIZE, 0, AV_INPUT_BUFFER_PADDING_SIZE);
+    
+    /* find the MPEG-1 video decoder */
+    codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+    if (!codec) {
+        fprintf(stderr, "Codec not found\n");
+        goto ksfault;
+    }
+    
+    parser = av_parser_init(codec->id);
+    if (!parser) {
+        fprintf(stderr, "parser not found\n");
+        goto ksfault;
+    }
+    
+    dec_ctx = avcodec_alloc_context3(codec);
+    if (!dec_ctx) {
+        fprintf(stderr, "Could not allocate video codec context\n");
+        goto ksfault;
+    }
+    
+    /* For some codecs, such as msmpeg4 and mpeg4, width and height
+       MUST be initialized there because this information is not
+       available in the bitstream. */
+
+    /* open it */
+    if (avcodec_open2(dec_ctx, codec, NULL) < 0) {
+        fprintf(stderr, "Could not open codec\n");
+        goto ksfault;
+    }
+    
+    file = fopen(filename, "rb");
+    if (!file) {
+        fprintf(stderr, "Could not open %s\n", filename);
+        goto ksfault;
+    }
+    
+    frame = av_frame_alloc();
+    if (!frame) {
+        fprintf(stderr, "Could not allocate video frame\n");
+        goto ksfault;
+    }
+    
+    while (!feof(file)) {
+        /* read raw data from the input file */
+        data_size = fread(inbuf, 1, INBUF_SIZE, file);
+        if (!data_size) {
+            break;
+        }
+        /* use the parser to split the data into frames */
+        data = inbuf;
+        while (data_size > 0) {
+            ret = av_parser_parse2(parser,
+                                   dec_ctx,
+                                   &pkt->data,
+                                   &pkt->size,
+                                   data,
+                                   data_size,
+                                   AV_NOPTS_VALUE,
+                                   AV_NOPTS_VALUE,
+                                   0);
+            if (ret < 0) {
+                fprintf(stderr, "Error while parsing\n");
+                goto ksfault;
+            }
+            data += ret;
+            data_size -= ret;
+            if (pkt->size) {
+                decode(dec_ctx, frame, pkt, outfilename);
+            }
+        }
+    }
+    
+ksfault:
+    if (dec_ctx && frame) {
+        decode(dec_ctx, frame, NULL, outfilename);
+    }
+    fclose(file);
+    av_parser_close(parser);
+    avcodec_free_context(&dec_ctx);
+    av_frame_free(&frame);
+    av_packet_free(&pkt);
+    
     return 0;
 }
