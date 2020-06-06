@@ -20,7 +20,7 @@
 }
 
 - (void)mediaPlayer {
-    char *inurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    char *inurl = "/Users/saeipi/Downloads/VideoFile/jianlai.mp3";
     char *outurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp3";
     decode_audio_port(inurl,outurl);
 }

@@ -89,7 +89,7 @@ int decode_audio_port(char *inurl,char *outurl) {
     
     /* find the MPEG audio decoder */
     //查找编解码器
-    codec = avcodec_find_decoder(AV_CODEC_ID_AAC);
+    codec = avcodec_find_decoder(AV_CODEC_ID_MP2);
     if (!codec) {
         fprintf(stderr, "Codec not found\n");
         goto ksfault;
