@@ -117,7 +117,7 @@ int decode_video_port(char *inurl,char *outurl) {
     
     /* find the MPEG-1 video decoder */
     //查找编解码器
-    codec = avcodec_find_decoder(AV_CODEC_ID_MPEG1VIDEO);
+    codec = avcodec_find_decoder(AV_CODEC_ID_H264);
     if (!codec) {
         fprintf(stderr, "Codec not found\n");
         goto ksfault;

@@ -21,7 +21,7 @@
 }
 
 - (void)mediaPlayer {
-    char *inurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    char *inurl = "/Users/saeipi/Downloads/VideoFile/sintel.h264";
     char *outurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich_Decode_Video.mp4";
     decode_video_port(inurl, outurl);
 }
