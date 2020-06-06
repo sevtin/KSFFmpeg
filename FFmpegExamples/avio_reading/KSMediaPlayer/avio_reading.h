@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int avio_reading_port(char *url);
+
 #endif /* avio_reading_h */

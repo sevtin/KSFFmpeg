@@ -20,8 +20,8 @@
 }
 
 - (void)mediaPlayer {
-    char *url = "/Users/saeipi/Downloads/File/SOPSandwich.mp4";
-    
+    char *url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    avio_reading_port(url);
 }
 
 - (void)setRepresentedObject:(id)representedObject {
