@@ -31,7 +31,7 @@ static void pgm_save(unsigned char *buf, int wrap, int xsize, int ysize, char *f
     fclose(file);
 }
 
-static int decode(AVCodecContext *dec_ctx, AVFrame *frame,AVPacket *pkt,const char *filename) {
+static int decode_video_execute(AVCodecContext *dec_ctx, AVFrame *frame,AVPacket *pkt,const char *filename) {
     char buf[1024];
     int ret;
     
@@ -80,12 +80,20 @@ static int decode(AVCodecContext *dec_ctx, AVFrame *frame,AVPacket *pkt,const ch
 }
 
 int decode_video_port(char *inurl,char *outurl) {
+    //输入输出文件
     const char *filename,*outfilename;
+    //编解码器
     const AVCodec *codec;
+    //解析器上下文
     AVCodecParserContext *parser;
+    //编解码器上下文
     AVCodecContext *dec_ctx;
     FILE *file;
     AVFrame *frame;
+    /*
+    AVPacket的size属性：
+    size：data的大小。当buf不为NULL时，size + AV_INPUT_BUFFER_PADDING_SIZE 等于buf->size。AV_INPUT_BUFFER_PADDING_SIZE是用于解码的输入流的末尾必要的额外字节个数，需要它主要是因为一些优化的流读取器一次读取32或者64比特，可能会读取超过size大小内存的末尾。看代码知道AV_INPUT_BUFFER_PADDING_SIZE的宏定义为了64。
+    */
     uint8_t inbuf[INBUF_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
     uint8_t *data;
     size_t data_size;
@@ -108,18 +116,21 @@ int decode_video_port(char *inurl,char *outurl) {
     memset(inbuf + INBUF_SIZE, 0, AV_INPUT_BUFFER_PADDING_SIZE);
     
     /* find the MPEG-1 video decoder */
-    codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+    //查找编解码器
+    codec = avcodec_find_decoder(AV_CODEC_ID_MPEG1VIDEO);
     if (!codec) {
         fprintf(stderr, "Codec not found\n");
         goto ksfault;
     }
     
+    //初始化解析器上下文
     parser = av_parser_init(codec->id);
     if (!parser) {
         fprintf(stderr, "parser not found\n");
         goto ksfault;
     }
     
+    //初始化编解码器上下文
     dec_ctx = avcodec_alloc_context3(codec);
     if (!dec_ctx) {
         fprintf(stderr, "Could not allocate video codec context\n");
@@ -131,11 +142,13 @@ int decode_video_port(char *inurl,char *outurl) {
        available in the bitstream. */
 
     /* open it */
+    //打开编解码器
     if (avcodec_open2(dec_ctx, codec, NULL) < 0) {
         fprintf(stderr, "Could not open codec\n");
         goto ksfault;
     }
     
+    //打开文件
     file = fopen(filename, "rb");
     if (!file) {
         fprintf(stderr, "Could not open %s\n", filename);
@@ -150,6 +163,16 @@ int decode_video_port(char *inurl,char *outurl) {
     
     while (!feof(file)) {
         /* read raw data from the input file */
+        /*
+        ize_t fread( void *buffer, size_t size, size_t count, FILE *stream );
+        从给定输入流stream读取最多count个对象到数组buffer中（相当于以对每个对象调用size次fgetc），把buffer当作unsigned char数组并顺序保存结果。流的文件位置指示器前进读取的字节数。
+        若出现错误，则流的文件位置指示器的位置不确定。若没有完整地读入最后一个元素，则其值不确定。
+        
+        buffer:指向要读取的数组中首个对象的指针
+        size:每个对象的大小（单位是字节）
+        count:要读取的对象个数
+        stream:输入流
+        */
         data_size = fread(inbuf, 1, INBUF_SIZE, file);
         if (!data_size) {
             break;
@@ -157,6 +180,24 @@ int decode_video_port(char *inurl,char *outurl) {
         /* use the parser to split the data into frames */
         data = inbuf;
         while (data_size > 0) {
+            /*
+            /**
+            * Parse a packet.
+            *
+            * @param s             parser context.解析器上下文
+            * @param avctx         codec context.编解码器上下文
+            * @param poutbuf       set to pointer to parsed buffer or NULL if not yet finished.设置为指向已解析缓冲区的指针；如果尚未完成，则为NULL
+            * @param poutbuf_size  set to size of parsed buffer or zero if not yet finished.设置为已解析缓冲区的大小，如果尚未完成，则设置为零
+            * @param buf           input buffer.输入缓冲区
+            * @param buf_size      buffer size in bytes without the padding. I.e. the full buffer
+                                   size is assumed to be buf_size + AV_INPUT_BUFFER_PADDING_SIZE.
+                                   To signal EOF, this should be 0 (so that the last frame
+                                   can be output).输入缓冲区大小
+            * @param pts           input presentation timestamp.
+            * @param dts           input decoding timestamp.
+            * @param pos           input byte position in stream.
+            * @return the number of bytes of the input bitstream used.//使用的输入比特流的字节数
+            */
             ret = av_parser_parse2(parser,
                                    dec_ctx,
                                    &pkt->data,
@@ -164,7 +205,7 @@ int decode_video_port(char *inurl,char *outurl) {
                                    data,
                                    data_size,
                                    AV_NOPTS_VALUE,
-                                   AV_NOPTS_VALUE,
+                                   AV_NOPTS_VALUE,//AV_NOPTS_VALUE:未定义的时间戳值
                                    0);
             if (ret < 0) {
                 fprintf(stderr, "Error while parsing\n");
@@ -173,14 +214,14 @@ int decode_video_port(char *inurl,char *outurl) {
             data += ret;
             data_size -= ret;
             if (pkt->size) {
-                decode(dec_ctx, frame, pkt, outfilename);
+                decode_video_execute(dec_ctx, frame, pkt, outfilename);
             }
         }
     }
     
 ksfault:
     if (dec_ctx && frame) {
-        decode(dec_ctx, frame, NULL, outfilename);
+        decode_video_execute(dec_ctx, frame, NULL, outfilename);
     }
     fclose(file);
     av_parser_close(parser);

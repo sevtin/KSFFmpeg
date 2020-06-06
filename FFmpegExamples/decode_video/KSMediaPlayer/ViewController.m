@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #include "decode_audio.h"
+#include "decode_video.h"
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -20,9 +21,9 @@
 }
 
 - (void)mediaPlayer {
-    char *inurl = "/Users/saeipi/Downloads/VideoFile/jianlai.mp3";
-    char *outurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp3";
-    decode_audio_port(inurl,outurl);
+    char *inurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    char *outurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich_Decode_Video.mp4";
+    decode_video_port(inurl, outurl);
 }
 
 - (void)setRepresentedObject:(id)representedObject {
