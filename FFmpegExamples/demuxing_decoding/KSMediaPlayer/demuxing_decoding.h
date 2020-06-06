@@ -11,4 +11,7 @@
 
 #include <stdio.h>
 
+int demuxing_decoding_port(char *val_src_filename,
+                           char *val_video_dst_filename,
+                           char *val_audio_dst_filename);
 #endif /* demuxing_decoding_h */
