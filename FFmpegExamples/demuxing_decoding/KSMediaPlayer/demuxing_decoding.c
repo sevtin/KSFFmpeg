@@ -231,12 +231,14 @@ int demuxing_decoding_port(char *val_src_filename,
     /* open input file, and allocate format context */
     if (avformat_open_input(&fmt_ctx, src_filename, NULL, NULL) < 0) {
         fprintf(stderr, "Could not open source file %s\n", src_filename);
+        ret = -1;
         goto ksfault;
     }
     
     /* retrieve stream information */
     if (avformat_find_stream_info(fmt_ctx, NULL) < 0) {
         fprintf(stderr, "Could not find stream information\n");
+        ret = -1;
         goto ksfault;
     }
     /* open input file, and allocate format context */
@@ -263,6 +265,7 @@ int demuxing_decoding_port(char *val_src_filename,
         
         if (ret < 0) {
             fprintf(stderr, "Could not allocate raw video buffer\n");
+            ret = -1;
             goto ksfault;
         }
         video_dst_bufsize = ret;
