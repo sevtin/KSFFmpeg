@@ -10,6 +10,7 @@
 #include "decode_audio.h"
 #include "decode_video.h"
 #include "demuxing_decoding.h"
+#include "encode_audio.h"
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -22,11 +23,17 @@
 }
 
 - (void)mediaPlayer {
+    /*
     char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
     char *dst_video_url = "/Users/saeipi/Downloads/VideoFile/dst_video.mp4";
     char *dst_audio_url = "/Users/saeipi/Downloads/VideoFile/dst_audio.mp3";
     
     demuxing_decoding_port(src_url, dst_video_url, dst_audio_url);
+     */
+    
+    char *dst_url = "/Users/saeipi/Downloads/VideoFile/encode_audio_out.mp3";
+    encode_audio_port(dst_url);
+    
 }
 
 - (void)setRepresentedObject:(id)representedObject {

@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int encode_audio_port(char *url);
+
 #endif /* encode_audio_h */
