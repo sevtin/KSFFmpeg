@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #include "decode_audio.h"
 #include "decode_video.h"
+#include "demuxing_decoding.h"
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -21,9 +22,11 @@
 }
 
 - (void)mediaPlayer {
-    char *inurl = "/Users/saeipi/Downloads/VideoFile/sintel.h264";
-    char *outurl = "/Users/saeipi/Downloads/VideoFile/SOPSandwich_Decode_Video.mp4";
-    decode_video_port(inurl, outurl);
+    char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    char *dst_video_url = "/Users/saeipi/Downloads/VideoFile/dst_video.mp4";
+    char *dst_audio_url = "/Users/saeipi/Downloads/VideoFile/dst_audio.mp3";
+    
+    demuxing_decoding_port(src_url, dst_video_url, dst_audio_url);
 }
 
 - (void)setRepresentedObject:(id)representedObject {
