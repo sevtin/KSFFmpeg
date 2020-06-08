@@ -11,12 +11,13 @@
 #include "decode_video.h"
 #include "demuxing_decoding.h"
 #include "encode_audio.h"
+#include "encode_video.h"
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSButton *playBtn = [NSButton buttonWithTitle:@"播放" target:self action:@selector(mediaPlayer)];
+    NSButton *playBtn = [NSButton buttonWithTitle:@"开始" target:self action:@selector(mediaPlayer)];
     [self.view addSubview:playBtn];
     playBtn.frame = CGRectMake(self.view.frame.size.width / 2 - 50, self.view.frame.size.height / 2 - 30, 100, 60);
     
@@ -31,8 +32,14 @@
     demuxing_decoding_port(src_url, dst_video_url, dst_audio_url);
      */
     
+    /*
     char *dst_url = "/Users/saeipi/Downloads/VideoFile/encode_audio_out.mp3";
     encode_audio_port(dst_url);
+    */
+    
+    //转出视频需要ffplay播放
+    char *dst_url = "/Users/saeipi/Downloads/VideoFile/encode_video_out.mp4";
+    encode_video_port(dst_url, "libx264");
     
 }
 

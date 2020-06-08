@@ -45,7 +45,7 @@ static int encode_video_execute(AVCodecContext *enc_ctx, AVFrame *frame, AVPacke
     return 0;
 }
 
-int encode_video_port(char *url, char *cname) {
+int encode_video_port(char *dst_url, char *cname) {
     const char *filename, *codec_name;
     const AVCodec *codec;
     AVCodecContext *cdc_ctx = NULL;
@@ -55,11 +55,11 @@ int encode_video_port(char *url, char *cname) {
     AVPacket *pkt;
     uint8_t endcode[] = { 0, 0, 1,0xb7 };
     
-    if (!url || !cname) {
+    if (!dst_url || !cname) {
         return -1;
     }
     
-    filename = url;
+    filename = dst_url;
     codec_name = cname;
     
     /* find the mpeg1video encoder */

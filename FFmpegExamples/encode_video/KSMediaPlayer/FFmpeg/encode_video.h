@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int encode_video_port(char *dst_url, char *cname);
+
 #endif /* encode_video_h */
