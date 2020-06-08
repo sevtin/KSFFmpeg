@@ -88,7 +88,7 @@ static int encode(AVCodecContext *ctx,AVFrame *frame,AVPacket *pkt, FILE *output
      * number of them */
     while (ret >= 0 ) {
         /*
-         接受编码后的AVPacket
+         接收编码后的AVPacket
          */
         ret = avcodec_receive_packet(ctx, pkt);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {

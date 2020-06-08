@@ -37,9 +37,11 @@
     encode_audio_port(dst_url);
     */
     
+    /*
     //转出视频需要ffplay播放
     char *dst_url = "/Users/saeipi/Downloads/VideoFile/encode_video_out.mp4";
     encode_video_port(dst_url, "libx264");
+     */
     
 }
 
