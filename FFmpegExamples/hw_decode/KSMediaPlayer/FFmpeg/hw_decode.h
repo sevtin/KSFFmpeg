@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int hw_decode_port(char *src_url, char *dst_url, char *device_type);
+
 #endif /* hw_decode_h */

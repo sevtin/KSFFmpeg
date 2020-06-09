@@ -131,6 +131,7 @@ int extract_mvs_port(char *src_url) {
         goto ksfault;
     }
     
+    //读取一部分视音频数据并且获得一些相关的信息
     if (avformat_find_stream_info(fmt_ctx, NULL) < 0) {
         fprintf(stderr, "Could not find stream information\n");
         ret = -1;

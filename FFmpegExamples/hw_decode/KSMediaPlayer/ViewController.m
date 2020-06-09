@@ -13,6 +13,7 @@
 #include "encode_audio.h"
 #include "encode_video.h"
 #include "extract_mvs.h"
+#include "hw_decode.h"
 
 @implementation ViewController
 
@@ -49,6 +50,10 @@
     char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
     extract_mvs_port(src_url);
     */
+    char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    char *dst_url = "/Users/saeipi/Downloads/VideoFile/hw_decode_audio_out.mp4";
+    
+    hw_decode_port(src_url, dst_url, "videotoolbox");
 }
 
 - (void)setRepresentedObject:(id)representedObject {
