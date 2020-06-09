@@ -37,6 +37,7 @@ static enum AVPixelFormat get_hw_format(AVCodecContext *ctx, const enum AVPixelF
             return *p;
         }
     }
+	fprintf(stderr, "Failed to get HW surface format.\n");
     return AV_PIX_FMT_NONE;
 }
 
@@ -201,7 +202,7 @@ int hw_decode_port(char *src_url, char *dst_url, char *device_type) {
     output_file = fopen(dst_url, "w+");
     
     /* actual decoding and dump the raw data */
-    while (ret > 0) {
+    while (ret >= 0) {
         if ((ret = av_read_frame(input_ctx, &packet)) < 0) {
             break;
         }
