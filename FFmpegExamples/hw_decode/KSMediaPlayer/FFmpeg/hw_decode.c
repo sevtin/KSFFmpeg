@@ -37,7 +37,7 @@ static int hw_decoder_init(AVCodecContext *ctx, const enum AVHWDeviceType type) 
              return NULL;
 
          *ret = *buf;
-
+            
          atomic_fetch_add_explicit(&buf->buffer->refcount, 1, memory_order_relaxed);
 
          return ret;
@@ -47,6 +47,20 @@ static int hw_decoder_init(AVCodecContext *ctx, const enum AVHWDeviceType type) 
      a) *ret = *buf;一句将buf各成员值赋值给ret中对应成员，buf和ret将共用同一份AVBuffer缓冲区
      b) atomic_fetch_add_explicit(...);一句将AVBuffer缓冲区引用计数加1
      注意此处的关键点：共用缓冲区(缓冲区不拷贝)，缓冲区引用计数加1
+     */
+    
+    /*
+     atomic_fetch_add_explicit 函数
+     将值添加到储存在 atomic 对象中的现有值中。
+
+     template <class T> T* atomic_fetch_add_explicit(
+        volatile atomic<T*> *Atom,
+        ptrdiff_t Value,
+        memory_order Order
+     ) noexcept;
+
+     Atom：指向atomic保存到类型 T 的指针的对象的指针。
+     Value：一个 ptrdiff_t 类型的值。
      */
     ctx->hw_device_ctx = av_buffer_ref(hw_device_ctx);
     return err;
