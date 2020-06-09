@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int extract_mvs_port(char *src_url);
+
 #endif /* extract_mvs_h */

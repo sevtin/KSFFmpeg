@@ -12,6 +12,8 @@
 #include "demuxing_decoding.h"
 #include "encode_audio.h"
 #include "encode_video.h"
+#include "extract_mvs.h"
+
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -42,6 +44,9 @@
     char *dst_url = "/Users/saeipi/Downloads/VideoFile/encode_video_out.mp4";
     encode_video_port(dst_url, "libx264");
      */
+    
+    char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    extract_mvs_port(src_url);
     
 }
 

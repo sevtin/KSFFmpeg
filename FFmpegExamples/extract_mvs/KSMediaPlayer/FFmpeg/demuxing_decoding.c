@@ -188,6 +188,9 @@ static int decode_packet(int *got_frame, int cached) {
 	/* If we use frame reference counting, we own the data and need
      * to de-reference it when we don't use it anymore */
     if (*got_frame && refcount) {
+        /*
+         AVFrame通常只需分配一次，然后可以多次重用，每次重用前应调用av_frame_unref()将frame复位到原始的干净可用的状态。
+         */
         av_frame_unref(frame);
     }
     return decoded;
@@ -204,6 +207,7 @@ static int open_codec_context(int *stream_idx,
     
     /*
      获取音视频/字幕的流索引stream_index
+     找到最好的视频流，通过FFmpeg的一系列算法，找到最好的默认的音视频流，主要用于播放器等需要程序自行识别选择视频流播放。
      */
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, NULL, 0);
     if (ret < 0) {

@@ -20,12 +20,26 @@ static AVFrame *frame = NULL;
 static int video_frame_count = 0;
 
 static int decode_packet(const AVPacket *pkt) {
+    //将带有压缩数据的数据包发送到解码器
     int ret = avcodec_send_packet(video_dec_ctx, pkt);
     if (ret < 0) {
         fprintf(stderr, "Error while sending a packet to the decoder: %s\n", av_err2str(ret));
         return ret;
     }
     while (ret >= 0) {
+        /*
+        从解码器中获取解码的输出数据(将成功的解码队列中取出1个frame  (如果失败会返回０）)
+        @参数 avctx 编码上下文
+        @参数 frame 这将会指向从解码器分配的一个引用计数的视频或者音频帧（取决于解码类型）
+        @注意该函数在处理其他事情之前会调用av_frame_unref(frame)
+
+        @返回值
+        0：成功，返回一帧数据
+        AVERROR(EAGAIN)：当前输出无效，用户必须发送新的输入
+        AVERROR_EOF：解码器已经完全刷新，当前没有多余的帧可以输出
+        AVERROR(EINVAL)：解码器没有被打开，或者它是一个编码器
+        其他负值：对应其他的解码错误
+        */
         ret = avcodec_receive_frame(video_dec_ctx, frame);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             break;
@@ -38,6 +52,7 @@ static int decode_packet(const AVPacket *pkt) {
             /* 用于保存AVFrame辅助数据的结构。*/
             AVFrameSideData *sd;
             video_frame_count++;
+            //获取解码frame中的运动矢量。
             sd = av_frame_get_side_data(frame, AV_FRAME_DATA_MOTION_VECTORS);
             if (sd) {
                 const AVMotionVector *mvs = (const AVMotionVector *)sd->data;
@@ -49,6 +64,9 @@ static int decode_packet(const AVPacket *pkt) {
                            mv->dst_x, mv->dst_y, mv->flags);
                 }
             }
+            /*
+            AVFrame通常只需分配一次，然后可以多次重用，每次重用前应调用av_frame_unref()将frame复位到原始的干净可用的状态。
+            */
             av_frame_unref(frame);
         }
     }
@@ -56,12 +74,16 @@ static int decode_packet(const AVPacket *pkt) {
 }
 
 static int open_codec_context(AVFormatContext *fmt_ctx,enum AVMediaType type) {
-    int ret;
+    int ret;
     AVStream *st;
     AVCodecContext *dec_ctx = NULL;
     AVCodec *dec = NULL;
     AVDictionary *opts = NULL;
     
+    /*
+    获取音视频/字幕的流索引stream_index
+    找到最好的视频流，通过FFmpeg的一系列算法，找到最好的默认的音视频流，主要用于播放器等需要程序自行识别选择视频流播放。
+    */
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, &dec, 0);
     if (ret < 0) {
         fprintf(stderr, "Could not find %s stream in input file '%s'\n",
@@ -76,7 +98,7 @@ static int open_codec_context(AVFormatContext *fmt_ctx,enum AVMediaType type) {
             fprintf(stderr, "Failed to allocate codec\n");
             return AVERROR(EINVAL);
         }
-        
+        //avcodec_parameters_to_context:将音频流信息拷贝到新的AVCodecContext结构体中
         ret = avcodec_parameters_to_context(dec_ctx, st->codecpar);
         if (ret < 0) {
             fprintf(stderr, "Failed to copy codec parameters to codec context\n");
@@ -85,6 +107,7 @@ static int open_codec_context(AVFormatContext *fmt_ctx,enum AVMediaType type) {
         
         /* Init the video decoder */
         av_dict_set(&opts, "flags2", "+export_mvs", 0);
+        //初始化视频解码器
         if ((ret = avcodec_open2(dec_ctx, dec, &opts)) < 0) {
             fprintf(stderr, "Failed to open %s codec\n",
                     av_get_media_type_string(type));
