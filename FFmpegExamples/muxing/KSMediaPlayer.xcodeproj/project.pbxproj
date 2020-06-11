@@ -32,6 +32,8 @@
 		E67E7AA9248E2951008AB511 /* extract_mvs.c in Sources */ = {isa = PBXBuildFile; fileRef = E67E7AA8248E2951008AB511 /* extract_mvs.c */; };
 		E67FD5FB248F7F03005149B1 /* http_multiclient.c in Sources */ = {isa = PBXBuildFile; fileRef = E67FD5FA248F7F03005149B1 /* http_multiclient.c */; };
 		E6A369182490A43300C95DFD /* muxing.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A369172490A43300C95DFD /* muxing.c */; };
+		E6C79CDE2491DA000005029F /* muxing01.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C79CDD2491DA000005029F /* muxing01.png */; };
+		E6C79CE0249209720005029F /* muxing02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E6C79CDF249209720005029F /* muxing02.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +77,8 @@
 		E67FD5FA248F7F03005149B1 /* http_multiclient.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = http_multiclient.c; sourceTree = "<group>"; };
 		E6A369162490A43300C95DFD /* muxing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = muxing.h; sourceTree = "<group>"; };
 		E6A369172490A43300C95DFD /* muxing.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = muxing.c; sourceTree = "<group>"; };
+		E6C79CDD2491DA000005029F /* muxing01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = muxing01.png; sourceTree = "<group>"; };
+		E6C79CDF249209720005029F /* muxing02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = muxing02.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +149,7 @@
 		E667EDB32484A0EE0094AACB /* KSMediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				E6C79CDC2491D9F50005029F /* Images */,
 				E626C698248D1FB800D6B3E4 /* FFmpeg */,
 				E667EDB42484A0EE0094AACB /* AppDelegate.h */,
 				E667EDB52484A0EE0094AACB /* AppDelegate.m */,
@@ -174,6 +179,15 @@
 				E667EDD02484A38D0094AACB /* libswscale.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6C79CDC2491D9F50005029F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				E6C79CDD2491DA000005029F /* muxing01.png */,
+				E6C79CDF249209720005029F /* muxing02.jpg */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,6 +247,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6C79CDE2491DA000005029F /* muxing01.png in Resources */,
+				E6C79CE0249209720005029F /* muxing02.jpg in Resources */,
 				E667EDBB2484A0EF0094AACB /* Assets.xcassets in Resources */,
 				E667EDBE2484A0EF0094AACB /* Main.storyboard in Resources */,
 			);
