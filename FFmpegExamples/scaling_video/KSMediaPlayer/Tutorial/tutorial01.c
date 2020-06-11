@@ -39,7 +39,7 @@ void SaveFrame(AVFrame *pFrame, int width, int height, int iFrame) {
   fclose(pFile);
 }
 
-int tutorial01_port(int argc, char *argv[]) {
+int tutorial01_port(char *src_url) {
   // Initalizing these to NULL prevents segfaults!
   AVFormatContext   *pFormatCtx = NULL;
   int               i, videoStream;
@@ -54,7 +54,7 @@ int tutorial01_port(int argc, char *argv[]) {
   uint8_t           *buffer = NULL;
   struct SwsContext *sws_ctx = NULL;
 
-  if(argc < 2) {
+  if(!src_url) {
     printf("Please provide a movie file\n");
     return -1;
   }
@@ -62,7 +62,7 @@ int tutorial01_port(int argc, char *argv[]) {
   av_register_all();
   
   // Open video file
-  if(avformat_open_input(&pFormatCtx, argv[1], NULL, NULL)!=0)
+  if(avformat_open_input(&pFormatCtx, src_url, NULL, NULL)!=0)
     return -1; // Couldn't open file
   
   // Retrieve stream information
@@ -70,7 +70,7 @@ int tutorial01_port(int argc, char *argv[]) {
     return -1; // Couldn't find stream information
   
   // Dump information about file onto standard error
-  av_dump_format(pFormatCtx, 0, argv[1], 0);
+  av_dump_format(pFormatCtx, 0, src_url, 0);
   
   // Find the first video stream
   videoStream=-1;
@@ -156,7 +156,7 @@ int tutorial01_port(int argc, char *argv[]) {
     }
     
     // Free the packet that was allocated by av_read_frame
-    av_free_packet(&packet);
+    av_packet_unref(&packet);
   }
   
   // Free the RGB image

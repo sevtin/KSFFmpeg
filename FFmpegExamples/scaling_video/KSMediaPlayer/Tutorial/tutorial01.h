@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int tutorial01_port(char *src_url);
+
 #endif /* tutorial01_h */

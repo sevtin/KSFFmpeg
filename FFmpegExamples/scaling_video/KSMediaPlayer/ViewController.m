@@ -15,6 +15,7 @@
 #include "extract_mvs.h"
 #include "hw_decode.h"
 #include "metadata.h"
+#include "tutorial01.h"
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -57,8 +58,12 @@
     
     hw_decode_port(src_url, dst_url, "videotoolbox");
      */
+    /*
     char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
     metadata_port(src_url);
+     */
+    char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    tutorial01_port(src_url);
 }
 
 - (void)setRepresentedObject:(id)representedObject {
