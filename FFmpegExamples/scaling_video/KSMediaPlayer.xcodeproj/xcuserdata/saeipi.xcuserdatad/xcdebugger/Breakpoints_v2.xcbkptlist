@@ -7,32 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F94ECA52-9AE9-4FB4-9D05-8BE00456F113"
+            uuid = "E9B3B8A1-6A59-4490-9931-FC397BC06488"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "KSMediaPlayer/Tutorial/tutorial01.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
-            landmarkName = "decode_write(avctx, packet, hw_pix_fmt)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "82BDF6A0-8CA6-4DDF-AB96-538F0071C4BD"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "KSMediaPlayer/Tutorial/tutorial01.c"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "decode_write(avctx, packet, hw_pix_fmt)"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
+            landmarkName = "tutorial01_port(src_url, dst_url1, device_type)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E60CFE51248BC8B1008BB153 /* demuxing_decoding.c in Sources */ = {isa = PBXBuildFile; fileRef = E60CFE50248BC8B1008BB153 /* demuxing_decoding.c */; };
 		E626C697248D1FB500D6B3E4 /* encode_video.c in Sources */ = {isa = PBXBuildFile; fileRef = E626C696248D1FB500D6B3E4 /* encode_video.c */; };
+		E63579E324935BA700F84672 /* tutorial001.c in Sources */ = {isa = PBXBuildFile; fileRef = E63579E224935BA700F84672 /* tutorial001.c */; };
 		E63798E324907FF100E79605 /* metadata.c in Sources */ = {isa = PBXBuildFile; fileRef = E63798E224907FF100E79605 /* metadata.c */; };
 		E6395C98248F346000B21765 /* hw_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = E6395C97248F346000B21765 /* hw_decode.c */; };
 		E666652D248B840800EBB404 /* decode_audio.c in Sources */ = {isa = PBXBuildFile; fileRef = E666652C248B840800EBB404 /* decode_audio.c */; };
@@ -43,6 +44,8 @@
 		E60CFE50248BC8B1008BB153 /* demuxing_decoding.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = demuxing_decoding.c; sourceTree = "<group>"; };
 		E626C695248D1FB500D6B3E4 /* encode_video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = encode_video.h; sourceTree = "<group>"; };
 		E626C696248D1FB500D6B3E4 /* encode_video.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = encode_video.c; sourceTree = "<group>"; };
+		E63579E124935BA700F84672 /* tutorial001.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tutorial001.h; sourceTree = "<group>"; };
+		E63579E224935BA700F84672 /* tutorial001.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tutorial001.c; sourceTree = "<group>"; };
 		E63798E124907FF100E79605 /* metadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = metadata.h; sourceTree = "<group>"; };
 		E63798E224907FF100E79605 /* metadata.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = metadata.c; sourceTree = "<group>"; };
 		E6395C96248F346000B21765 /* hw_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hw_decode.h; sourceTree = "<group>"; };
@@ -204,6 +207,8 @@
 			children = (
 				E6C79CE5249225C10005029F /* tutorial01.h */,
 				E6C79CE6249225C10005029F /* tutorial01.c */,
+				E63579E124935BA700F84672 /* tutorial001.h */,
+				E63579E224935BA700F84672 /* tutorial001.c */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 				E667EDB92484A0EE0094AACB /* ViewController.m in Sources */,
 				E667EDC12484A0EF0094AACB /* main.m in Sources */,
 				E6666530248BA07A00EBB404 /* decode_video.c in Sources */,
+				E63579E324935BA700F84672 /* tutorial001.c in Sources */,
 				E67FD5FB248F7F03005149B1 /* http_multiclient.c in Sources */,
 				E63798E324907FF100E79605 /* metadata.c in Sources */,
 				E6C79CE324920F580005029F /* scaling_video.c in Sources */,

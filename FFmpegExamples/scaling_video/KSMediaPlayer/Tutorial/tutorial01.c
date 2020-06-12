@@ -10,6 +10,8 @@
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
+#include "libavutil/hwcontext.h"
+#include "libavutil/imgutils.h"
 
 // compatibility with newer API
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55,28,1)
@@ -17,40 +19,16 @@
 #define av_frame_free avcodec_free_frame
 #endif
 
-void SaveFrame(AVFrame *pFrame, int width, int height, int iFrame) {
-  FILE *pFile;
-  char szFilename[32];
-  int  y;
-  
-  // Open file
-  sprintf(szFilename, "frame%d.ppm", iFrame);
-  pFile=fopen(szFilename, "wb");
-  if(pFile==NULL)
-    return;
-  
-  // Write header
-  fprintf(pFile, "P6\n%d %d\n255\n", width, height);
-  
-  // Write pixel data
-  for(y=0; y<height; y++)
-    fwrite(pFrame->data[0]+y*pFrame->linesize[0], 1, width*3, pFile);
-  
-  // Close file
-  fclose(pFile);
-}
-
-
 /// 打开编解码器上下文 返回0成功
-/// @param stream_idx inout参数:流index
 /// @param dec_ctx inout参数:编解码器上下文
 /// @param fmt_ctx 格式上下文
 /// @param type 视屏/音频
-static int open_codec_context(int *stream_idx,
+static int open_codec_context(AVFormatContext *fmt_ctx,
                               AVCodecContext **dec_ctx,
                               AVCodec **dec,
-                              AVFormatContext *fmt_ctx,
+                              int *stream_index,
                               enum AVMediaType type) {
-    int ret,stream_index;
+    int ret;
     AVStream *st;
     AVDictionary *opts = NULL;
     /*
@@ -62,8 +40,8 @@ static int open_codec_context(int *stream_idx,
         return ret;
     }
     else {
-        stream_index = ret;
-        st = fmt_ctx->streams[stream_index];
+        *stream_index = ret;
+        st = fmt_ctx->streams[*stream_index];
         
         /* find decoder for the stream */
         // 获取数据流对应的解码器
@@ -77,8 +55,7 @@ static int open_codec_context(int *stream_idx,
         //为解码器分配编解码器上下文
         *dec_ctx = avcodec_alloc_context3(*dec);//需要使用avcodec_free_context释放
         if (!*dec_ctx) {
-            fprintf(stderr, "Failed to allocate the %s codec context\n",
-                    av_get_media_type_string(type));
+            fprintf(stderr, "Failed to allocate the %s codec context\n", av_get_media_type_string(type));
             return AVERROR(ENOMEM);
         }
         /* Copy codec parameters from input stream to output codec context */
@@ -94,19 +71,17 @@ static int open_codec_context(int *stream_idx,
          将AVCodecParameters结构体中码流参数拷贝到AVCodecContext结构体中，并且重新拷贝一份extradata内容，涉及到的视频的关键参数有format, width, height, codec_type等，这些参数在优化avformat_find_stream_info函数的时候，手动指定该参数通过InitDecoder函数解码统一指定H264，分辨率是1920*1080
          */
         if ((ret = avcodec_parameters_to_context(*dec_ctx, st->codecpar)) < 0) {
-            fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
-                    av_get_media_type_string(type));
+            fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n", av_get_media_type_string(type));
             return ret;
         }
         /* Init the decoders, with or without reference counting */
         // 在有或没有参考计数的情况下初始化解码器
         if ((ret = avcodec_open2(*dec_ctx, *dec, &opts)) < 0) {
-            fprintf(stderr, "Failed to open %s codec\n",
-                    av_get_media_type_string(type));
+            fprintf(stderr, "Failed to open %s codec\n", av_get_media_type_string(type));
             return ret;
         }
-        *stream_idx = stream_index;
     }
+    av_dict_free(&opts);
     return 0;
 }
 
@@ -132,18 +107,18 @@ static int decode_write(AVCodecContext *avctx, AVPacket *packet, FILE *output_fi
         }
         
         /*
-        从解码器中获取解码的输出数据(将成功的解码队列中取出1个frame  (如果失败会返回０）)
-        @参数 avctx 编码上下文
-        @参数 frame 这将会指向从解码器分配的一个引用计数的视频或者音频帧（取决于解码类型）
-        @注意该函数在处理其他事情之前会调用av_frame_unref(frame)
-
-        @返回值
-        0：成功，返回一帧数据
-        AVERROR(EAGAIN)：当前输出无效，用户必须发送新的输入
-        AVERROR_EOF：解码器已经完全刷新，当前没有多余的帧可以输出
-        AVERROR(EINVAL)：解码器没有被打开，或者它是一个编码器
-        其他负值：对应其他的解码错误
-        */
+         从解码器中获取解码的输出数据(将成功的解码队列中取出1个frame  (如果失败会返回０）)
+         @参数 avctx 编码上下文
+         @参数 frame 这将会指向从解码器分配的一个引用计数的视频或者音频帧（取决于解码类型）
+         @注意该函数在处理其他事情之前会调用av_frame_unref(frame)
+         
+         @返回值
+         0：成功，返回一帧数据
+         AVERROR(EAGAIN)：当前输出无效，用户必须发送新的输入
+         AVERROR_EOF：解码器已经完全刷新，当前没有多余的帧可以输出
+         AVERROR(EINVAL)：解码器没有被打开，或者它是一个编码器
+         其他负值：对应其他的解码错误
+         */
         ret = avcodec_receive_frame(avctx, frame);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             av_frame_free(&frame);
@@ -188,22 +163,22 @@ static int decode_write(AVCodecContext *avctx, AVPacket *packet, FILE *output_fi
          const uint8_t * const src_data[4], const int src_linesize[4],
          enum AVPixelFormat pix_fmt, int width, int height, int align);
          
-        将图像数据从图像复制到缓冲区。
-        
-        av_image_get_buffer_size（）可用于计算所需的大小
-        用于填充缓冲区。
-        
-        @param dst 将图像数据复制到的缓冲区
-        @param dst_size dst 的字节大小
-        @param src_data 指针包含源图像数据
-        @param src_linesize 调整src_data中图像的大小
-        @param pix_fmt 源图像的像素格式
-        @param width 源图像的宽度（以像素为单位）
-        @param height 源图像的高度（以像素为单位）
-        @param 对齐dst的假定行大小对齐
-        @返回写入dst的字节数或负值
-        （错误代码）错误
-        */
+         将图像数据从图像复制到缓冲区。
+         
+         av_image_get_buffer_size（）可用于计算所需的大小
+         用于填充缓冲区。
+         
+         @param dst 将图像数据复制到的缓冲区
+         @param dst_size dst 的字节大小
+         @param src_data 指针包含源图像数据
+         @param src_linesize 调整src_data中图像的大小
+         @param pix_fmt 源图像的像素格式
+         @param width 源图像的宽度（以像素为单位）
+         @param height 源图像的高度（以像素为单位）
+         @param 对齐dst的假定行大小对齐
+         @返回写入dst的字节数或负值
+         （错误代码）错误
+         */
         ret = av_image_copy_to_buffer(buffer,
                                       size,
                                       (const uint8_t * const *)tmp_frame->data,
@@ -237,23 +212,25 @@ static int decode_write(AVCodecContext *avctx, AVPacket *packet, FILE *output_fi
     return 0;
 }
 
-int tutorial01_port(char *src_url) {
-  // Initalizing these to NULL prevents segfaults!
-  AVFormatContext   *pFormatCtx = NULL;
-  int               i, ret, videoStream = -1;
-  AVCodecContext    *pCodecCtxOrig = NULL;
-  AVCodecContext    *pCodecCtx = NULL;
-  AVCodec           *pCodec = NULL;
-  AVFrame           *pFrame = NULL;
-  AVFrame           *pFrameRGB = NULL;
-  AVPacket          packet;
-  AVStream          *video_st;
-  int               frameFinished;
-  int               numBytes;
-  uint8_t           *buffer = NULL;
-  struct SwsContext *sws_ctx = NULL;
-
-    if(!src_url) {
+void test() {
+    sws_scale(NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+}
+int tutorial01_port(char *src_url, char *dst_url1, char *device_type) {
+    // Initalizing these to NULL prevents segfaults!
+    AVFormatContext   *pFormatCtx = NULL;
+    int               i, ret;
+    int               hw_pix_fmt;
+    int               stream_index;
+    AVCodecContext    *pCodecCtx = NULL;
+    AVCodec           *pCodec = NULL;
+    AVFrame           *pFrame = NULL;
+    AVFrame           *pFrameRGB = NULL;
+    AVPacket          packet;
+    uint8_t           *buffer = NULL;
+    struct SwsContext *sws_ctx = NULL;
+    FILE              *file = NULL;
+    
+    if(!src_url || !dst_url1) {
         printf("Please provide a movie file\n");
         return -1;
     }
@@ -261,123 +238,74 @@ int tutorial01_port(char *src_url) {
     av_register_all();
     
     // Open video file
-    if(avformat_open_input(&pFormatCtx, src_url, NULL, NULL)!=0)
+    if(avformat_open_input(&pFormatCtx, src_url, NULL, NULL) !=0 ) {
         return -1; // Couldn't open file
+    }
     
     // Retrieve stream information
-    if(avformat_find_stream_info(pFormatCtx, NULL)<0)
+    if(avformat_find_stream_info(pFormatCtx, NULL) < 0) {
         return -1; // Couldn't find stream information
+    }
     
     // Dump information about file onto standard error
     av_dump_format(pFormatCtx, 0, src_url, 0);
     
     // Find the first video stream
-    videoStream = -1;
-    
-    ret = open_codec_context(&videoStream, &pCodecCtxOrig, &pCodec, pFormatCtx, AVMEDIA_TYPE_VIDEO);
+    ret = open_codec_context(pFormatCtx, &pCodecCtx, &pCodec, &stream_index, AVMEDIA_TYPE_VIDEO);
     if (ret != 0) {
         goto ksend;
     }
-    if (videoStream == -1) {
-        goto ksend;
-    }
-
-  if(pCodec==NULL) {
-    // Codec not found
-    fprintf(stderr, "Unsupported codec!\n");
-    goto ksend;
-  }
-    video_st = pFormatCtx->streams[videoStream];
-    if (!video_st) {
+    
+    file = fopen(dst_url1, "wb");
+    if (!file) {
         goto ksend;
     }
     
-    
-    
-  // Copy context
-  pCodecCtx = avcodec_alloc_context3(pCodec);
-  
-    if (avcodec_parameters_to_context(pCodecCtx, video_st->codecpar) < 0) {
+    enum AVHWDeviceType type = av_hwdevice_find_type_by_name("videotoolbox");
+    for (i = 0; ; i++) {
+        //检索编解码器支持的硬件配置。
+        const AVCodecHWConfig *config = avcodec_get_hw_config(pCodec, i);
+        if (!config) {
+            goto ksend;
+        }
+        if (config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX && config->device_type == type) {
+            hw_pix_fmt = config->pix_fmt;
+            break;
+        }
+    }
+
+    if (ret < 0) {
+        fprintf(stderr, "Error occurred when opening output file: %s\n", av_err2str(ret));
         goto ksend;
     }
-    
-
-  // Open codec
-  if(avcodec_open2(pCodecCtx, pCodec, NULL)<0)
-    return -1; // Could not open codec
-  
-  // Allocate video frame
-  pFrame=av_frame_alloc();
-  
-  // Allocate an AVFrame structure
-  pFrameRGB=av_frame_alloc();
-  if(pFrameRGB==NULL)
-    return -1;
-
-  // Determine required buffer size and allocate buffer
-  numBytes=avpicture_get_size(AV_PIX_FMT_RGB24, pCodecCtx->width,
-                  pCodecCtx->height);
-  buffer=(uint8_t *)av_malloc(numBytes*sizeof(uint8_t));
-  
-  // Assign appropriate parts of buffer to image planes in pFrameRGB
-  // Note that pFrameRGB is an AVFrame, but AVFrame is a superset
-  // of AVPicture
-  avpicture_fill((AVPicture *)pFrameRGB, buffer, AV_PIX_FMT_RGB24,
-         pCodecCtx->width, pCodecCtx->height);
-  
-  // initialize SWS context for software scaling
-  sws_ctx = sws_getContext(pCodecCtx->width,
-               pCodecCtx->height,
-               pCodecCtx->pix_fmt,
-               pCodecCtx->width,
-               pCodecCtx->height,
-               AV_PIX_FMT_RGB24,
-               SWS_BILINEAR,
-               NULL,
-               NULL,
-               NULL
-               );
-
-  // Read frames and save first five frames to disk
-  i=0;
-  while(av_read_frame(pFormatCtx, &packet)>=0) {
-    // Is this a packet from the video stream?
-    if(packet.stream_index==videoStream) {
-      // Decode video frame
-      avcodec_decode_video2(pCodecCtx, pFrame, &frameFinished, &packet);
-      
-      // Did we get a video frame?
-      if(frameFinished) {
-    // Convert the image from its native format to RGB
-    sws_scale(sws_ctx, (uint8_t const * const *)pFrame->data,
-          pFrame->linesize, 0, pCodecCtx->height,
-          pFrameRGB->data, pFrameRGB->linesize);
-    
-    // Save the frame to disk
-    if(++i<=5)
-      SaveFrame(pFrameRGB, pCodecCtx->width, pCodecCtx->height,
-            i);
-      }
+    /* actual decoding and dump the raw data */
+    while (ret >= 0) {
+        //依次读取数据包
+        if ((ret = av_read_frame(pFormatCtx, &packet)) < 0) {
+            break;
+        }
+        if (stream_index == packet.stream_index) {
+            ret = decode_write(pCodecCtx, &packet, file, hw_pix_fmt);
+        }
+        //减少引用计数
+        av_packet_unref(&packet);
     }
-    
-    // Free the packet that was allocated by av_read_frame
-    av_packet_unref(&packet);
-  }
-  
+
 ksend:
-  // Free the RGB image
-  av_free(buffer);
-  av_frame_free(&pFrameRGB);
-  
-  // Free the YUV frame
-  av_frame_free(&pFrame);
-  
-  // Close the codecs
-  avcodec_close(pCodecCtx);
-  avcodec_close(pCodecCtxOrig);
-
-  // Close the video file
-  avformat_close_input(&pFormatCtx);
-  
-  return 0;
+    fclose(file);
+    
+    // Free the RGB image
+    av_free(buffer);
+    av_frame_free(&pFrameRGB);
+    
+    // Free the YUV frame
+    av_frame_free(&pFrame);
+    
+    // Close the codecs
+    avcodec_close(pCodecCtx);
+    
+    // Close the video file
+    avformat_close_input(&pFormatCtx);
+    
+    return 0;
 }
