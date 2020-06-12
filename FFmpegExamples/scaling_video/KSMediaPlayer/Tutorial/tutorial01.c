@@ -221,10 +221,8 @@ int tutorial01_port(char *src_url, char *dst_url1, char *device_type) {
     AVCodecContext    *pCodecCtx = NULL;
     AVCodec           *pCodec = NULL;
     AVFrame           *pFrame = NULL;
-    AVFrame           *pFrameRGB = NULL;
     AVPacket          packet;
     uint8_t           *buffer = NULL;
-    struct SwsContext *sws_ctx = NULL;
     FILE              *output = NULL;
     
     if(!src_url || !dst_url1) {
@@ -294,8 +292,7 @@ ksend:
     
     // Free the RGB image
     av_free(buffer);
-    av_frame_free(&pFrameRGB);
-    
+
     // Free the YUV frame
     av_frame_free(&pFrame);
     
