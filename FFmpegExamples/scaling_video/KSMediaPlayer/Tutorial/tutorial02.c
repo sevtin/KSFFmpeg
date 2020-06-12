@@ -1,23 +1,30 @@
 //
-//  tutorial01.c
+//  tutorial02.c
 //  KSMediaPlayer
 //
-//  Created by saeipi on 2020/6/11.
+//  Created by saeipi on 2020/6/12.
 //  Copyright © 2020 saeipi. All rights reserved.
 //
 
-#include "tutorial01.h"
+#include "tutorial02.h"
+#include "SDL2/SDL.h"
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
 #include "libavutil/hwcontext.h"
 #include "libavutil/imgutils.h"
 
+
 // compatibility with newer API
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55,28,1)
 #define av_frame_alloc avcodec_alloc_frame
 #define av_frame_free avcodec_free_frame
 #endif
+
+SDL_Window *win;
+SDL_Rect rect;
+SDL_Renderer *renderer;
+SDL_Texture  *texture;
 
 /// 打开编解码器上下文 返回0成功
 /// @param fmt_ctx 格式上下文
@@ -85,6 +92,26 @@ static int open_codec_context(AVFormatContext *fmt_ctx,
     return 0;
 }
 
+/* SDL 显示YUV数据 */
+void video_display(AVFrame *frame, int width, int height) {
+    if(frame) {
+        
+        SDL_UpdateYUVTexture( texture, NULL,
+                             frame->data[0], frame->linesize[0],
+                             frame->data[1], frame->linesize[1],
+                             frame->data[2], frame->linesize[2]);
+        
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = width;
+        rect.h = height;
+        
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, texture, NULL, &rect);
+        SDL_RenderPresent(renderer );
+    }
+}
+
 static int decode_write_video(AVCodecContext *avctx, AVPacket *packet, int hw_pix_fmt, FILE *output_file) {
     AVFrame *frame = NULL, *sw_frame = NULL;
     AVFrame *tmp_frame = NULL;
@@ -129,6 +156,7 @@ static int decode_write_video(AVCodecContext *avctx, AVPacket *packet, int hw_pi
             fprintf(stderr, "Error while decoding\n");
             goto ksfail;
         }
+        
         if (frame->format == hw_pix_fmt) {
             /* retrieve data from GPU to CPU */
             /* 从GPU检索数据到CPU */
@@ -191,6 +219,8 @@ static int decode_write_video(AVCodecContext *avctx, AVPacket *packet, int hw_pi
             fprintf(stderr, "Can not copy image to buffer\n");
             goto ksfail;
         }
+        printf("\n--------- update ---------");
+        video_display(tmp_frame, tmp_frame->width, tmp_frame->height);
         
         if ((ret = fwrite(buffer, 1, size, output_file)) < 0) {
             fprintf(stderr, "Failed to dump raw data.\n");
@@ -212,7 +242,35 @@ static int decode_write_video(AVCodecContext *avctx, AVPacket *packet, int hw_pi
     return 0;
 }
 
-int tutorial01_port(char *src_url, char *dst_url, char *device_type) {
+void create_window(int width, int height) {
+    //creat window from SDL
+    win = SDL_CreateWindow("Media Player",
+                           SDL_WINDOWPOS_UNDEFINED,
+                           SDL_WINDOWPOS_UNDEFINED,
+                           width,
+                           height,
+                           SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);//SDL_WINDOW_RESIZABLE:可大可小
+    if(!win) {
+        fprintf(stderr, "SDL: could not set video mode - exiting\n");
+        exit(1);
+    }
+    
+    renderer = SDL_CreateRenderer(win, -1, 0);
+    
+    //IYUV: Y + U + V  (3 planes)
+    //YV12: Y + V + U  (3 planes)
+    //像素格式：YUV的数据
+    Uint32 pixformat= SDL_PIXELFORMAT_IYUV;
+    
+    //create texture for render
+    texture = SDL_CreateTexture(renderer,
+                                pixformat,
+                                SDL_TEXTUREACCESS_STREAMING,
+                                width,
+                                height);
+}
+
+int tutorial02_port(char *src_url, char *dst_url, char *device_type) {
     // Initalizing these to NULL prevents segfaults!
     AVFormatContext   *pFormatCtx = NULL;
     int               i, ret;
@@ -273,6 +331,14 @@ int tutorial01_port(char *src_url, char *dst_url, char *device_type) {
         fprintf(stderr, "Error occurred when opening output file: %s\n", av_err2str(ret));
         goto ksend;
     }
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER))
+    {
+        fprintf(stderr, "Could not initialize SDL - %s/n", SDL_GetError());
+        goto ksend;
+    }
+    
+    create_window(pCodecCtx->width, pCodecCtx->height);
+
     pFrame = av_frame_alloc();
     /* actual decoding and dump the raw data */
     while (ret >= 0) {

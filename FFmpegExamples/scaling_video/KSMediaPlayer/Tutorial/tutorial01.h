@@ -11,6 +11,6 @@
 
 #include <stdio.h>
 
-int tutorial01_port(char *src_url, char *dst_url1, char *device_type);
+int tutorial01_port(char *src_url, char *dst_url, char *device_type);
 
 #endif /* tutorial01_h */

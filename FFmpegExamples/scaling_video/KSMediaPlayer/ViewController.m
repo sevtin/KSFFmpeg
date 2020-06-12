@@ -16,6 +16,7 @@
 #include "hw_decode.h"
 #include "metadata.h"
 #include "tutorial01.h"
+#include "tutorial02.h"
 
 @implementation ViewController
 
@@ -59,13 +60,20 @@
     
     hw_decode_port(src_url, dst_url, "videotoolbox");
      */
+    
     /*
     char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
     metadata_port(src_url);
      */
+    
+    /*
     char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
     char *dst_url = "/Users/saeipi/Downloads/VideoFile/tutorial_SOPSandwich.mp4";
     tutorial01_port(src_url, dst_url, "videotoolbox");
+     */
+    char *src_url = "/Users/saeipi/Downloads/VideoFile/SOPSandwich.mp4";
+    char *dst_url = "/Users/saeipi/Downloads/VideoFile/tutorial_SOPSandwich.mp4";
+    tutorial02_port(src_url, dst_url, "videotoolbox");
 }
 
 - (void)setRepresentedObject:(id)representedObject {
