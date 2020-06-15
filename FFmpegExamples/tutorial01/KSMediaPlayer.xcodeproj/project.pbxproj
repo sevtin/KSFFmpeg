@@ -29,6 +29,7 @@
 		E667EDDC2484A38D0094AACB /* libpostproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E667EDD32484A38D0094AACB /* libpostproc.a */; };
 		E667EDDD2484A38D0094AACB /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E667EDD42484A38D0094AACB /* libavformat.a */; };
 		E667EDDF2484A39B0094AACB /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E667EDDE2484A39B0094AACB /* libSDL2.a */; };
+		E669401C24974F250086771C /* tutorial001.c in Sources */ = {isa = PBXBuildFile; fileRef = E669401B24974F250086771C /* tutorial001.c */; };
 		E679F615248CE0D200F296EE /* encode_audio.c in Sources */ = {isa = PBXBuildFile; fileRef = E679F614248CE0D200F296EE /* encode_audio.c */; };
 		E67E7AA9248E2951008AB511 /* extract_mvs.c in Sources */ = {isa = PBXBuildFile; fileRef = E67E7AA8248E2951008AB511 /* extract_mvs.c */; };
 		E67FD5FB248F7F03005149B1 /* http_multiclient.c in Sources */ = {isa = PBXBuildFile; fileRef = E67FD5FA248F7F03005149B1 /* http_multiclient.c */; };
@@ -74,6 +75,8 @@
 		E667EDD32484A38D0094AACB /* libpostproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpostproc.a; path = ../../../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libpostproc.a; sourceTree = "<group>"; };
 		E667EDD42484A38D0094AACB /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavformat.a; sourceTree = "<group>"; };
 		E667EDDE2484A39B0094AACB /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../../../../../../../Users/saeipi/Documents/Library/SDL2/lib/libSDL2.a; sourceTree = "<group>"; };
+		E669401A24974F250086771C /* tutorial001.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tutorial001.h; sourceTree = "<group>"; };
+		E669401B24974F250086771C /* tutorial001.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tutorial001.c; sourceTree = "<group>"; };
 		E679F613248CE0D200F296EE /* encode_audio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = encode_audio.h; sourceTree = "<group>"; };
 		E679F614248CE0D200F296EE /* encode_audio.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = encode_audio.c; sourceTree = "<group>"; };
 		E67E7AA7248E2951008AB511 /* extract_mvs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = extract_mvs.h; sourceTree = "<group>"; };
@@ -193,6 +196,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E669401D249760160086771C /* tutorial01Test */ = {
+			isa = PBXGroup;
+			children = (
+				E6C79CE5249225C10005029F /* tutorial01.h */,
+				E6C79CE6249225C10005029F /* tutorial01.c */,
+				E63579E4249378F000F84672 /* tutorial02.h */,
+				E63579E5249378F000F84672 /* tutorial02.c */,
+				E669401A24974F250086771C /* tutorial001.h */,
+				E669401B24974F250086771C /* tutorial001.c */,
+			);
+			path = tutorial01Test;
+			sourceTree = "<group>";
+		};
 		E6C79CDC2491D9F50005029F /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,10 +221,7 @@
 		E6C79CE4249225AA0005029F /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
-				E6C79CE5249225C10005029F /* tutorial01.h */,
-				E6C79CE6249225C10005029F /* tutorial01.c */,
-				E63579E4249378F000F84672 /* tutorial02.h */,
-				E63579E5249378F000F84672 /* tutorial02.c */,
+				E669401D249760160086771C /* tutorial01Test */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -288,6 +301,7 @@
 				E667EDC12484A0EF0094AACB /* main.m in Sources */,
 				E6666530248BA07A00EBB404 /* decode_video.c in Sources */,
 				E63579E6249378F000F84672 /* tutorial02.c in Sources */,
+				E669401C24974F250086771C /* tutorial001.c in Sources */,
 				E67FD5FB248F7F03005149B1 /* http_multiclient.c in Sources */,
 				E63798E324907FF100E79605 /* metadata.c in Sources */,
 				E6C79CE324920F580005029F /* scaling_video.c in Sources */,
