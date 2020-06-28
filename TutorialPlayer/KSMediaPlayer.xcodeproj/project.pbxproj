@@ -48,6 +48,7 @@
 		E667EDD32484A38D0094AACB /* libpostproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpostproc.a; path = ../../../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libpostproc.a; sourceTree = "<group>"; };
 		E667EDD42484A38D0094AACB /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../../../../../../Users/saeipi/Documents/Library/FFmpeg/lib/libavformat.a; sourceTree = "<group>"; };
 		E667EDDE2484A39B0094AACB /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../../../../../../../Users/saeipi/Documents/Library/SDL2/lib/libSDL2.a; sourceTree = "<group>"; };
+		E678A8FA24A89D0800C59519 /* Tutorial.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Tutorial.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 				E667EDC22484A0EF0094AACB /* KSMediaPlayer.entitlements */,
 				E667EDC82484A1020094AACB /* ks_media_player.h */,
 				E667EDC92484A1020094AACB /* ks_media_player.c */,
+				E678A8FA24A89D0800C59519 /* Tutorial.md */,
 			);
 			path = KSMediaPlayer;
 			sourceTree = "<group>";
