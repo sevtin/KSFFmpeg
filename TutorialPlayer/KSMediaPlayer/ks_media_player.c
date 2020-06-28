@@ -204,6 +204,7 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     pkt1 = av_malloc(sizeof(AVPacketList));
     if (!pkt1)
         return -1;
+    
     pkt1->pkt = *pkt;
     pkt1->next = NULL;
     
@@ -434,6 +435,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
             data_size = 0;
             if(got_frame) {
                 /*
+                //这个视频播放会变慢
                 data_size = av_samples_get_buffer_size(NULL,
                                                        is->audio_ctx->channels,
                                                        is->audio_frame.nb_samples,

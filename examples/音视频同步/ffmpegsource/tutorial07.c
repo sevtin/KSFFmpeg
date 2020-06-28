@@ -208,6 +208,7 @@ static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
   return ret;
 }
 
+//特有1
 static void packet_queue_flush(PacketQueue *q) {
   AVPacketList *pkt, *pkt1;
 
@@ -373,6 +374,7 @@ int audio_decode_frame(VideoState *is, uint8_t *audio_buf, int buf_size, double 
     if(packet_queue_get(&is->audioq, pkt, 1) < 0) {
       return -1;
     }
+    //特有3
     if(pkt->data == flush_pkt.data) {
       avcodec_flush_buffers(is->audio_ctx);
       continue;
@@ -429,7 +431,7 @@ static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque) {
 static void schedule_refresh(VideoState *is, int delay) {
   SDL_AddTimer(delay, sdl_refresh_timer_cb, is);
 }
-
+//特有3
 void video_display(VideoState *is) {
 
   SDL_Rect rect;
@@ -535,7 +537,7 @@ void video_refresh_timer(void *userdata) {
     schedule_refresh(is, 100);
   }
 }
-      
+//特有4     
 void alloc_picture(void *userdata) {
 
   VideoState *is = (VideoState *)userdata;
@@ -825,6 +827,7 @@ int decode_thread(void *arg) {
     if(is->quit) {
       break;
     }
+    //特有5
     // seek stuff goes here
     if(is->seek_req) {
       int stream_index= -1;
@@ -901,6 +904,7 @@ void stream_seek(VideoState *is, int64_t pos, int rel) {
   }
 }
 
+//特有6
 int main(int argc, char *argv[]) {
 
   SDL_Event       event;
