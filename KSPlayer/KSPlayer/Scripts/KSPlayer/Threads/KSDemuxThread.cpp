@@ -6,4 +6,21 @@
 //  Copyright © 2020 saeipi. All rights reserved.
 //
 
-#include "KSDemuxThread.hpp"
+#include "KSDemuxThread.h"
+#include <iostream>
+#include "KSDemux.h"
+#include "KSVideoThread.h"
+#include "KSAudioThread.h"
+using namespace std;
+
+void KSDemuxThread::run() {
+    while (!is_exit) {
+        mux.lock();
+        if (!demux) {
+            mux.unlock();
+            msleep(5);
+            continue;
+        }
+        mux.unlock();
+    }
+}

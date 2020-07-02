@@ -14,22 +14,18 @@ class KSDecode;
 #include <list>
 #include <mutex>
 #include "KSProtocol.h"
+#include "KSThread.h"
 
-class KSMediaThread {
+class KSMediaThread: public KSThread {
 public:
     //最大队列
     int max_list = 100;
-    bool is_exit = false;
-    
+
     void push(AVPacket *pkt);
-    void msleep(int ms);
     virtual void run() = 0;
-    
-    KSMediaThread();
-    virtual ~KSMediaThread();
+
 protected:
     std::list <AVPacket *> packs;
-    std::mutex mux;
     KSDecode *decode = NULL;
     KSVideoProtocol *protocol = NULL;
 };

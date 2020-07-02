@@ -34,6 +34,7 @@
 		E6299DF424AD727E00256E84 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6299DF224AD727E00256E84 /* LaunchScreen.storyboard */; };
 		E6299DF724AD727E00256E84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6299DF624AD727E00256E84 /* main.m */; };
 		E6824FB424ADB54F00D9EEA9 /* KSMediaThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */; };
+		E6824FB724ADBFC100D9EEA9 /* KSThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6824FB524ADBFC100D9EEA9 /* KSThread.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,9 +58,9 @@
 		E6137F0524AD757E004E7033 /* KSDecode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDecode.cpp; sourceTree = "<group>"; };
 		E6137F0624AD757E004E7033 /* KSDecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSDecode.h; sourceTree = "<group>"; };
 		E6137F0824AD7598004E7033 /* KSDemux.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDemux.cpp; sourceTree = "<group>"; };
-		E6137F0924AD7598004E7033 /* KSDemux.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSDemux.hpp; sourceTree = "<group>"; };
+		E6137F0924AD7598004E7033 /* KSDemux.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSDemux.h; sourceTree = "<group>"; };
 		E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDemuxThread.cpp; sourceTree = "<group>"; };
-		E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSDemuxThread.hpp; sourceTree = "<group>"; };
+		E6137F0C24AD75AB004E7033 /* KSDemuxThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSDemuxThread.h; sourceTree = "<group>"; };
 		E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSVideoThread.cpp; sourceTree = "<group>"; };
 		E6137F0F24AD75CE004E7033 /* KSVideoThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSVideoThread.h; sourceTree = "<group>"; };
 		E6137F1124AD75F4004E7033 /* KSResample.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSResample.cpp; sourceTree = "<group>"; };
@@ -77,6 +78,8 @@
 		E6824FB124ADB01600D9EEA9 /* KSProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSProtocol.h; sourceTree = "<group>"; };
 		E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSMediaThread.cpp; sourceTree = "<group>"; };
 		E6824FB324ADB54F00D9EEA9 /* KSMediaThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSMediaThread.h; sourceTree = "<group>"; };
+		E6824FB524ADBFC100D9EEA9 /* KSThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSThread.cpp; sourceTree = "<group>"; };
+		E6824FB624ADBFC100D9EEA9 /* KSThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSThread.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,7 +143,7 @@
 				E6137F0624AD757E004E7033 /* KSDecode.h */,
 				E6137F0524AD757E004E7033 /* KSDecode.cpp */,
 				E6137F0824AD7598004E7033 /* KSDemux.cpp */,
-				E6137F0924AD7598004E7033 /* KSDemux.hpp */,
+				E6137F0924AD7598004E7033 /* KSDemux.h */,
 				E6137F1224AD75F4004E7033 /* KSResample.h */,
 				E6137F1124AD75F4004E7033 /* KSResample.cpp */,
 				E6824FB124ADB01600D9EEA9 /* KSProtocol.h */,
@@ -151,14 +154,16 @@
 		E6137F1424AD7642004E7033 /* Threads */ = {
 			isa = PBXGroup;
 			children = (
+				E6137F0C24AD75AB004E7033 /* KSDemuxThread.h */,
 				E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */,
-				E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */,
 				E6137F0324AD7566004E7033 /* KSAudioThread.h */,
 				E6137F0224AD7566004E7033 /* KSAudioThread.cpp */,
 				E6137F0F24AD75CE004E7033 /* KSVideoThread.h */,
 				E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */,
 				E6824FB324ADB54F00D9EEA9 /* KSMediaThread.h */,
 				E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */,
+				E6824FB624ADBFC100D9EEA9 /* KSThread.h */,
+				E6824FB524ADBFC100D9EEA9 /* KSThread.cpp */,
 			);
 			path = Threads;
 			sourceTree = "<group>";
@@ -278,6 +283,7 @@
 				E6137F0124AD7541004E7033 /* KSAudioPlay.cpp in Sources */,
 				E6137F0424AD7566004E7033 /* KSAudioThread.cpp in Sources */,
 				E6299DE924AD727D00256E84 /* AppDelegate.m in Sources */,
+				E6824FB724ADBFC100D9EEA9 /* KSThread.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

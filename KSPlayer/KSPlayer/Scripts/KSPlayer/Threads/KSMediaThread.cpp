@@ -7,11 +7,6 @@
 //
 
 #include "KSMediaThread.h"
-#include <thread>
-
-void KSMediaThread::msleep(int ms) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
 
 void KSMediaThread::push(AVPacket *pkt) {
     if (!pkt) {
@@ -30,10 +25,3 @@ void KSMediaThread::push(AVPacket *pkt) {
     }
 }
 
-KSMediaThread::KSMediaThread() {
-    
-}
-
-KSMediaThread::~KSMediaThread() {
-    is_exit = true;
-}
