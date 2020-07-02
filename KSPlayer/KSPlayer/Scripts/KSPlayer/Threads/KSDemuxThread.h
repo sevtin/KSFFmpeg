@@ -15,7 +15,9 @@ class KSAudioThread;
 
 class KSDemuxThread: public KSThread {
 public:
+    //创建对象并打开
     virtual bool open(const char *url, KSVideoProtocol *protocol);
+    //启动所有线程
     virtual void start();
     void run();
     KSDemuxThread();

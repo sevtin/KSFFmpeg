@@ -53,6 +53,7 @@
     playerView.backgroundColor = [UIColor redColor];
     videoWidget->playerView = playerView;
     [self.view addSubview:videoWidget->playerView];
+    
 }
 
 class KSVideoWidget: public KSVideoProtocol {
