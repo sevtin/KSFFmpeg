@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E6137EED24AD7351004E7033 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EE624AD7351004E7033 /* libavfilter.a */; };
+		E6137EEE24AD7351004E7033 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EE724AD7351004E7033 /* libavcodec.a */; };
+		E6137EEF24AD7351004E7033 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EE824AD7351004E7033 /* libswresample.a */; };
+		E6137EF024AD7351004E7033 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EE924AD7351004E7033 /* libavdevice.a */; };
+		E6137EF124AD7351004E7033 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EEA24AD7351004E7033 /* libswscale.a */; };
+		E6137EF224AD7351004E7033 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EEB24AD7351004E7033 /* libavformat.a */; };
+		E6137EF324AD7351004E7033 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EEC24AD7351004E7033 /* libavutil.a */; };
+		E6137EF824AD7462004E7033 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EF724AD7462004E7033 /* CoreMedia.framework */; };
+		E6137EFA24AD746D004E7033 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EF924AD746D004E7033 /* VideoToolbox.framework */; };
+		E6137EFC24AD747F004E7033 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EFB24AD747F004E7033 /* AudioToolbox.framework */; };
+		E6137F0124AD7541004E7033 /* KSAudioPlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */; };
+		E6137F0424AD7566004E7033 /* KSAudioThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137F0224AD7566004E7033 /* KSAudioThread.cpp */; };
+		E6137F0724AD757E004E7033 /* KSDecode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137F0524AD757E004E7033 /* KSDecode.cpp */; };
+		E6137F0A24AD7598004E7033 /* KSDemux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137F0824AD7598004E7033 /* KSDemux.cpp */; };
+		E6137F0D24AD75AB004E7033 /* KSDemuxThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */; };
+		E6137F1024AD75CE004E7033 /* KSVideoThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */; };
+		E6137F1324AD75F4004E7033 /* KSResample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6137F1124AD75F4004E7033 /* KSResample.cpp */; };
+		E6137F1A24AD7961004E7033 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EF424AD743C004E7033 /* libz.tbd */; };
+		E6137F1B24AD796C004E7033 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EF524AD744D004E7033 /* libbz2.tbd */; };
+		E6137F1C24AD7983004E7033 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6137EF624AD7458004E7033 /* libiconv.tbd */; };
 		E6299DE924AD727D00256E84 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6299DE824AD727D00256E84 /* AppDelegate.m */; };
 		E6299DEC24AD727D00256E84 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6299DEB24AD727D00256E84 /* ViewController.m */; };
 		E6299DEF24AD727D00256E84 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6299DED24AD727D00256E84 /* Main.storyboard */; };
@@ -16,6 +36,33 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E6137EE624AD7351004E7033 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libavfilter.a"; sourceTree = "<group>"; };
+		E6137EE724AD7351004E7033 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libavcodec.a"; sourceTree = "<group>"; };
+		E6137EE824AD7351004E7033 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libswresample.a"; sourceTree = "<group>"; };
+		E6137EE924AD7351004E7033 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavdevice.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libavdevice.a"; sourceTree = "<group>"; };
+		E6137EEA24AD7351004E7033 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libswscale.a"; sourceTree = "<group>"; };
+		E6137EEB24AD7351004E7033 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libavformat.a"; sourceTree = "<group>"; };
+		E6137EEC24AD7351004E7033 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = "../../../../../../../Users/saeipi/Documents/Library/FFmpeg-iOS/lib/libavutil.a"; sourceTree = "<group>"; };
+		E6137EF424AD743C004E7033 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		E6137EF524AD744D004E7033 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		E6137EF624AD7458004E7033 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		E6137EF724AD7462004E7033 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		E6137EF924AD746D004E7033 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		E6137EFB24AD747F004E7033 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSAudioPlay.cpp; sourceTree = "<group>"; };
+		E6137F0024AD7541004E7033 /* KSAudioPlay.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSAudioPlay.hpp; sourceTree = "<group>"; };
+		E6137F0224AD7566004E7033 /* KSAudioThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSAudioThread.cpp; sourceTree = "<group>"; };
+		E6137F0324AD7566004E7033 /* KSAudioThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSAudioThread.hpp; sourceTree = "<group>"; };
+		E6137F0524AD757E004E7033 /* KSDecode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDecode.cpp; sourceTree = "<group>"; };
+		E6137F0624AD757E004E7033 /* KSDecode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSDecode.hpp; sourceTree = "<group>"; };
+		E6137F0824AD7598004E7033 /* KSDemux.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDemux.cpp; sourceTree = "<group>"; };
+		E6137F0924AD7598004E7033 /* KSDemux.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSDemux.hpp; sourceTree = "<group>"; };
+		E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDemuxThread.cpp; sourceTree = "<group>"; };
+		E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSDemuxThread.hpp; sourceTree = "<group>"; };
+		E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSVideoThread.cpp; sourceTree = "<group>"; };
+		E6137F0F24AD75CE004E7033 /* KSVideoThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSVideoThread.hpp; sourceTree = "<group>"; };
+		E6137F1124AD75F4004E7033 /* KSResample.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSResample.cpp; sourceTree = "<group>"; };
+		E6137F1224AD75F4004E7033 /* KSResample.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSResample.hpp; sourceTree = "<group>"; };
 		E6299DE424AD727D00256E84 /* KSPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6299DE724AD727D00256E84 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E6299DE824AD727D00256E84 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -33,17 +80,88 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6137F1C24AD7983004E7033 /* libiconv.tbd in Frameworks */,
+				E6137F1B24AD796C004E7033 /* libbz2.tbd in Frameworks */,
+				E6137F1A24AD7961004E7033 /* libz.tbd in Frameworks */,
+				E6137EF824AD7462004E7033 /* CoreMedia.framework in Frameworks */,
+				E6137EED24AD7351004E7033 /* libavfilter.a in Frameworks */,
+				E6137EFA24AD746D004E7033 /* VideoToolbox.framework in Frameworks */,
+				E6137EEE24AD7351004E7033 /* libavcodec.a in Frameworks */,
+				E6137EEF24AD7351004E7033 /* libswresample.a in Frameworks */,
+				E6137EF024AD7351004E7033 /* libavdevice.a in Frameworks */,
+				E6137EF124AD7351004E7033 /* libswscale.a in Frameworks */,
+				E6137EFC24AD747F004E7033 /* AudioToolbox.framework in Frameworks */,
+				E6137EF224AD7351004E7033 /* libavformat.a in Frameworks */,
+				E6137EF324AD7351004E7033 /* libavutil.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E6137EE524AD7351004E7033 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E6137EFB24AD747F004E7033 /* AudioToolbox.framework */,
+				E6137EF924AD746D004E7033 /* VideoToolbox.framework */,
+				E6137EF724AD7462004E7033 /* CoreMedia.framework */,
+				E6137EF624AD7458004E7033 /* libiconv.tbd */,
+				E6137EF524AD744D004E7033 /* libbz2.tbd */,
+				E6137EF424AD743C004E7033 /* libz.tbd */,
+				E6137EE724AD7351004E7033 /* libavcodec.a */,
+				E6137EE924AD7351004E7033 /* libavdevice.a */,
+				E6137EE624AD7351004E7033 /* libavfilter.a */,
+				E6137EEB24AD7351004E7033 /* libavformat.a */,
+				E6137EEC24AD7351004E7033 /* libavutil.a */,
+				E6137EE824AD7351004E7033 /* libswresample.a */,
+				E6137EEA24AD7351004E7033 /* libswscale.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6137EFD24AD74AC004E7033 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				E6137EFE24AD74CD004E7033 /* KSPlayer */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		E6137EFE24AD74CD004E7033 /* KSPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				E6137F1424AD7642004E7033 /* Threads */,
+				E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */,
+				E6137F0024AD7541004E7033 /* KSAudioPlay.hpp */,
+				E6137F0524AD757E004E7033 /* KSDecode.cpp */,
+				E6137F0624AD757E004E7033 /* KSDecode.hpp */,
+				E6137F0824AD7598004E7033 /* KSDemux.cpp */,
+				E6137F0924AD7598004E7033 /* KSDemux.hpp */,
+				E6137F1124AD75F4004E7033 /* KSResample.cpp */,
+				E6137F1224AD75F4004E7033 /* KSResample.hpp */,
+			);
+			path = KSPlayer;
+			sourceTree = "<group>";
+		};
+		E6137F1424AD7642004E7033 /* Threads */ = {
+			isa = PBXGroup;
+			children = (
+				E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */,
+				E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */,
+				E6137F0224AD7566004E7033 /* KSAudioThread.cpp */,
+				E6137F0324AD7566004E7033 /* KSAudioThread.hpp */,
+				E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */,
+				E6137F0F24AD75CE004E7033 /* KSVideoThread.hpp */,
+			);
+			path = Threads;
+			sourceTree = "<group>";
+		};
 		E6299DDB24AD727D00256E84 = {
 			isa = PBXGroup;
 			children = (
 				E6299DE624AD727D00256E84 /* KSPlayer */,
 				E6299DE524AD727D00256E84 /* Products */,
+				E6137EE524AD7351004E7033 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +176,7 @@
 		E6299DE624AD727D00256E84 /* KSPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				E6137EFD24AD74AC004E7033 /* Scripts */,
 				E6299DE724AD727D00256E84 /* AppDelegate.h */,
 				E6299DE824AD727D00256E84 /* AppDelegate.m */,
 				E6299DEA24AD727D00256E84 /* ViewController.h */,
@@ -141,8 +260,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6137F0A24AD7598004E7033 /* KSDemux.cpp in Sources */,
 				E6299DEC24AD727D00256E84 /* ViewController.m in Sources */,
+				E6137F0724AD757E004E7033 /* KSDecode.cpp in Sources */,
+				E6137F0D24AD75AB004E7033 /* KSDemuxThread.cpp in Sources */,
+				E6137F1324AD75F4004E7033 /* KSResample.cpp in Sources */,
+				E6137F1024AD75CE004E7033 /* KSVideoThread.cpp in Sources */,
 				E6299DF724AD727E00256E84 /* main.m in Sources */,
+				E6137F0124AD7541004E7033 /* KSAudioPlay.cpp in Sources */,
+				E6137F0424AD7566004E7033 /* KSAudioThread.cpp in Sources */,
 				E6299DE924AD727D00256E84 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,14 +410,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TW8WRSRZ44;
 				INFOPLIST_FILE = KSPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "/Users/saeipi/Documents/Library/FFmpeg-iOS/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.KSPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "/Users/saeipi/Documents/Library/FFmpeg-iOS/include";
 			};
 			name = Debug;
 		};
@@ -300,14 +429,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TW8WRSRZ44;
 				INFOPLIST_FILE = KSPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "/Users/saeipi/Documents/Library/FFmpeg-iOS/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = com.saeipi.KSPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "/Users/saeipi/Documents/Library/FFmpeg-iOS/include";
 			};
 			name = Release;
 		};
