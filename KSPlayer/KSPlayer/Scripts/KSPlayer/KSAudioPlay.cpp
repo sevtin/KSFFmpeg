@@ -14,6 +14,7 @@
 #define AUDIO_REFILL_THRESH 4096
 
 class KSSuperAudioPlay:public KSAudioPlay {
+    
 public:
     std::mutex mux;
     uint8_t audio_buf[AUDIO_INBUF_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
@@ -55,3 +56,17 @@ public:
         return 0;
     }
 };
+
+KSAudioPlay* KSAudioPlay::shared() {
+    static KSSuperAudioPlay play;
+    return &play;
+}
+
+KSAudioPlay::KSAudioPlay()
+{
+}
+
+
+KSAudioPlay::~KSAudioPlay()
+{
+}

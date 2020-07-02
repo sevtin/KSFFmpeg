@@ -52,7 +52,7 @@
 		E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSAudioPlay.cpp; sourceTree = "<group>"; };
 		E6137F0024AD7541004E7033 /* KSAudioPlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSAudioPlay.h; sourceTree = "<group>"; };
 		E6137F0224AD7566004E7033 /* KSAudioThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSAudioThread.cpp; sourceTree = "<group>"; };
-		E6137F0324AD7566004E7033 /* KSAudioThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSAudioThread.hpp; sourceTree = "<group>"; };
+		E6137F0324AD7566004E7033 /* KSAudioThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSAudioThread.h; sourceTree = "<group>"; };
 		E6137F0524AD757E004E7033 /* KSDecode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDecode.cpp; sourceTree = "<group>"; };
 		E6137F0624AD757E004E7033 /* KSDecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSDecode.h; sourceTree = "<group>"; };
 		E6137F0824AD7598004E7033 /* KSDemux.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDemux.cpp; sourceTree = "<group>"; };
@@ -148,8 +148,8 @@
 			children = (
 				E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */,
 				E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */,
+				E6137F0324AD7566004E7033 /* KSAudioThread.h */,
 				E6137F0224AD7566004E7033 /* KSAudioThread.cpp */,
-				E6137F0324AD7566004E7033 /* KSAudioThread.hpp */,
 				E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */,
 				E6137F0F24AD75CE004E7033 /* KSVideoThread.hpp */,
 			);
