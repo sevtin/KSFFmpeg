@@ -109,6 +109,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E602E18A24ADEC1A00515EBA /* Process */ = {
+			isa = PBXGroup;
+			children = (
+				E6137F0024AD7541004E7033 /* KSAudioPlay.h */,
+				E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */,
+				E6137F0624AD757E004E7033 /* KSDecode.h */,
+				E6137F0524AD757E004E7033 /* KSDecode.cpp */,
+				E6137F0924AD7598004E7033 /* KSDemux.h */,
+				E6137F0824AD7598004E7033 /* KSDemux.cpp */,
+				E6137F1224AD75F4004E7033 /* KSResample.h */,
+				E6137F1124AD75F4004E7033 /* KSResample.cpp */,
+			);
+			path = Process;
+			sourceTree = "<group>";
+		};
 		E6137EE524AD7351004E7033 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,16 +155,9 @@
 		E6137EFE24AD74CD004E7033 /* KSPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				E602E18A24ADEC1A00515EBA /* Process */,
 				E6824FB824ADE08200D9EEA9 /* Widgets */,
 				E6137F1424AD7642004E7033 /* Threads */,
-				E6137F0024AD7541004E7033 /* KSAudioPlay.h */,
-				E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */,
-				E6137F0624AD757E004E7033 /* KSDecode.h */,
-				E6137F0524AD757E004E7033 /* KSDecode.cpp */,
-				E6137F0924AD7598004E7033 /* KSDemux.h */,
-				E6137F0824AD7598004E7033 /* KSDemux.cpp */,
-				E6137F1224AD75F4004E7033 /* KSResample.h */,
-				E6137F1124AD75F4004E7033 /* KSResample.cpp */,
 				E6824FB124ADB01600D9EEA9 /* KSProtocol.h */,
 			);
 			path = KSPlayer;
