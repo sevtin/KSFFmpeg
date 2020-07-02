@@ -8,7 +8,6 @@
 
 #include "KSAudioThread.h"
 #include <iostream>
-#include <thread>
 #include "KSDecode.h"
 #include "KSAudioPlay.h"
 #include "KSResample.h"
@@ -46,10 +45,6 @@ bool KSAudioThread::open(AVCodecParameters *par,int sample_rate,int channels) {
     return true;
 }
 
-void sleep(int ms) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
-
 void KSAudioThread::push(AVPacket *pkt) {
     if (!pkt) {
         return;
@@ -63,7 +58,7 @@ void KSAudioThread::push(AVPacket *pkt) {
             break;
         }
         mux.unlock();
-        sleep(2);
+        msleep(2);
     }
 }
 
@@ -74,7 +69,7 @@ void KSAudioThread::run() {
         //没有数据
         if (packs.empty() || !decode || !resample || !audio_play) {
             mux.unlock();
-            sleep(2);
+            msleep(2);
             continue;
         }
         AVPacket *pkt = packs.front();
@@ -82,7 +77,7 @@ void KSAudioThread::run() {
         bool ret = decode->send(pkt);
         if (!ret) {
             mux.unlock();
-            sleep(2);
+            msleep(2);
             continue;
         }
         //一次send 多次receive
@@ -99,7 +94,7 @@ void KSAudioThread::run() {
                 }
                 //缓冲未播完，空间不够
                 if (audio_play->getFree() < size) {
-                    sleep(2);
+                    msleep(2);
                     continue;
                 }
                 audio_play->write(pcm, size);
@@ -111,14 +106,3 @@ void KSAudioThread::run() {
     delete[] pcm;
 }
 
-KSAudioThread::KSAudioThread()
-{
-    
-}
-
-KSAudioThread::~KSAudioThread()
-{
-    //等待线程退出
-    is_exit = true;
-    //wait();
-}

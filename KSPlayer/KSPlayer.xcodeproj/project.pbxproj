@@ -33,6 +33,7 @@
 		E6299DF124AD727E00256E84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6299DF024AD727E00256E84 /* Assets.xcassets */; };
 		E6299DF424AD727E00256E84 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6299DF224AD727E00256E84 /* LaunchScreen.storyboard */; };
 		E6299DF724AD727E00256E84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6299DF624AD727E00256E84 /* main.m */; };
+		E6824FB424ADB54F00D9EEA9 /* KSMediaThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,7 +61,7 @@
 		E6137F0B24AD75AB004E7033 /* KSDemuxThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSDemuxThread.cpp; sourceTree = "<group>"; };
 		E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSDemuxThread.hpp; sourceTree = "<group>"; };
 		E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSVideoThread.cpp; sourceTree = "<group>"; };
-		E6137F0F24AD75CE004E7033 /* KSVideoThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSVideoThread.hpp; sourceTree = "<group>"; };
+		E6137F0F24AD75CE004E7033 /* KSVideoThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSVideoThread.h; sourceTree = "<group>"; };
 		E6137F1124AD75F4004E7033 /* KSResample.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSResample.cpp; sourceTree = "<group>"; };
 		E6137F1224AD75F4004E7033 /* KSResample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSResample.h; sourceTree = "<group>"; };
 		E6299DE424AD727D00256E84 /* KSPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +74,9 @@
 		E6299DF324AD727E00256E84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E6299DF524AD727E00256E84 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6299DF624AD727E00256E84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E6824FB124ADB01600D9EEA9 /* KSProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSProtocol.h; sourceTree = "<group>"; };
+		E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSMediaThread.cpp; sourceTree = "<group>"; };
+		E6824FB324ADB54F00D9EEA9 /* KSMediaThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSMediaThread.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +143,7 @@
 				E6137F0924AD7598004E7033 /* KSDemux.hpp */,
 				E6137F1224AD75F4004E7033 /* KSResample.h */,
 				E6137F1124AD75F4004E7033 /* KSResample.cpp */,
+				E6824FB124ADB01600D9EEA9 /* KSProtocol.h */,
 			);
 			path = KSPlayer;
 			sourceTree = "<group>";
@@ -150,8 +155,10 @@
 				E6137F0C24AD75AB004E7033 /* KSDemuxThread.hpp */,
 				E6137F0324AD7566004E7033 /* KSAudioThread.h */,
 				E6137F0224AD7566004E7033 /* KSAudioThread.cpp */,
+				E6137F0F24AD75CE004E7033 /* KSVideoThread.h */,
 				E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */,
-				E6137F0F24AD75CE004E7033 /* KSVideoThread.hpp */,
+				E6824FB324ADB54F00D9EEA9 /* KSMediaThread.h */,
+				E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */,
 			);
 			path = Threads;
 			sourceTree = "<group>";
@@ -265,6 +272,7 @@
 				E6137F0724AD757E004E7033 /* KSDecode.cpp in Sources */,
 				E6137F0D24AD75AB004E7033 /* KSDemuxThread.cpp in Sources */,
 				E6137F1324AD75F4004E7033 /* KSResample.cpp in Sources */,
+				E6824FB424ADB54F00D9EEA9 /* KSMediaThread.cpp in Sources */,
 				E6137F1024AD75CE004E7033 /* KSVideoThread.cpp in Sources */,
 				E6299DF724AD727E00256E84 /* main.m in Sources */,
 				E6137F0124AD7541004E7033 /* KSAudioPlay.cpp in Sources */,
