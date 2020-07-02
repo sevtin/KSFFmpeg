@@ -17,14 +17,14 @@
 
 class KSAudioPlay {
 public:
-    int sampleRate = 44100;
-    int sampleSize = 16;
+    int sample_rate = 44100;
+    int sample_fmt = 16;
     int channels = 2;
     
-    virtual bool open() = 0;
-    virtual void close() = 0;
+    virtual bool open();
+    virtual void close();
     
-    virtual bool write(const unsigned char *data, int datasize) = 0;
+    virtual bool write(const unsigned char *data, int data_size);
     
     virtual int getFree() = 0;
     
