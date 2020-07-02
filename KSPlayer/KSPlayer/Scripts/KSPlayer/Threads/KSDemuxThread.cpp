@@ -18,7 +18,7 @@ void KSDemuxThread::run() {
         mux.lock();
         if (!demux) {
             mux.unlock();
-            msleep(5);
+            msleep(10);
             continue;
         }
         mux.unlock();

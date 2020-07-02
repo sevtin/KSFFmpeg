@@ -25,12 +25,11 @@ bool KSAudioThread::open(AVCodecParameters *par,int sample_rate,int channels) {
         resample = new KSResample();
     }
     
-    audio_play->sample_rate = sample_rate;
-    audio_play->channels = channels;
-    
     if (!audio_play) {
         audio_play = KSAudioPlay::shared();
     }
+    audio_play->sample_rate = sample_rate;
+    audio_play->channels = channels;
     
     bool ret = true;
     if (!resample->open(par, false)) {

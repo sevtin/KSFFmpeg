@@ -10,13 +10,7 @@
 
 class KSVideoThread: public KSMediaThread {
 public:
-    //最大队列
-    //int max_list = 100;
-    //bool is_exit = false;
-    
     //打开，不管成功与否都清理
     virtual bool open(AVCodecParameters *par,KSVideoProtocol *protocol,int width,int height);
-    //virtual void push(AVPacket *pkt);
-     virtual void run() = 0;
-    
+    virtual void run();
 };
