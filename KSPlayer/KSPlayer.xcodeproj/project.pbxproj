@@ -35,6 +35,7 @@
 		E6299DF724AD727E00256E84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6299DF624AD727E00256E84 /* main.m */; };
 		E6824FB424ADB54F00D9EEA9 /* KSMediaThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6824FB224ADB54F00D9EEA9 /* KSMediaThread.cpp */; };
 		E6824FB724ADBFC100D9EEA9 /* KSThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6824FB524ADBFC100D9EEA9 /* KSThread.cpp */; };
+		E6824FBB24ADE09E00D9EEA9 /* KSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6824FB924ADE09E00D9EEA9 /* KSPlayerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,8 @@
 		E6824FB324ADB54F00D9EEA9 /* KSMediaThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSMediaThread.h; sourceTree = "<group>"; };
 		E6824FB524ADBFC100D9EEA9 /* KSThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSThread.cpp; sourceTree = "<group>"; };
 		E6824FB624ADBFC100D9EEA9 /* KSThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSThread.h; sourceTree = "<group>"; };
+		E6824FB924ADE09E00D9EEA9 /* KSPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KSPlayerView.m; sourceTree = "<group>"; };
+		E6824FBA24ADE09E00D9EEA9 /* KSPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KSPlayerView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +140,7 @@
 		E6137EFE24AD74CD004E7033 /* KSPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				E6824FB824ADE08200D9EEA9 /* Widgets */,
 				E6137F1424AD7642004E7033 /* Threads */,
 				E6137F0024AD7541004E7033 /* KSAudioPlay.h */,
 				E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */,
@@ -200,6 +204,15 @@
 				E6299DF624AD727E00256E84 /* main.m */,
 			);
 			path = KSPlayer;
+			sourceTree = "<group>";
+		};
+		E6824FB824ADE08200D9EEA9 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				E6824FBA24ADE09E00D9EEA9 /* KSPlayerView.h */,
+				E6824FB924ADE09E00D9EEA9 /* KSPlayerView.m */,
+			);
+			path = Widgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,6 +293,7 @@
 				E6824FB424ADB54F00D9EEA9 /* KSMediaThread.cpp in Sources */,
 				E6137F1024AD75CE004E7033 /* KSVideoThread.cpp in Sources */,
 				E6299DF724AD727E00256E84 /* main.m in Sources */,
+				E6824FBB24ADE09E00D9EEA9 /* KSPlayerView.m in Sources */,
 				E6137F0124AD7541004E7033 /* KSAudioPlay.cpp in Sources */,
 				E6137F0424AD7566004E7033 /* KSAudioThread.cpp in Sources */,
 				E6299DE924AD727D00256E84 /* AppDelegate.m in Sources */,

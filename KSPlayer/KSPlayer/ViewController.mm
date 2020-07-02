@@ -12,6 +12,10 @@
 #include "KSAudioThread.h"
 #include "KSVideoThread.h"
 #import "KSProtocol.h"
+#import "KSPlayerView.h"
+
+#include "libavcodec/avcodec.h"
+
 @interface ViewController ()
 
 @end
@@ -42,17 +46,29 @@
     KSAudioThread *audioThread = new KSAudioThread();
     KSVideoThread *videoThread = new KSVideoThread();
     audioThread->open(demux->copyAudioPar(), demux->sample_rate, demux->channels);
-    KSVideoCallback *protocol = new KSVideoCallback();
-    videoThread->open(demux->copyVideoPar(), protocol, demux->width, demux->height);
+    KSVideoWidget *videoWidget = new KSVideoWidget();
+    videoThread->open(demux->copyVideoPar(), videoWidget, demux->width, demux->height);
     
+    KSPlayerView *playerView = [[KSPlayerView alloc] initWithFrame:CGRectMake(0, 0, 320, 240)];
+    playerView.backgroundColor = [UIColor redColor];
+    videoWidget->playerView = playerView;
+    [self.view addSubview:videoWidget->playerView];
 }
 
-class KSVideoCallback: public KSVideoProtocol {
+class KSVideoWidget: public KSVideoProtocol {
+public:
+    KSPlayerView *playerView;
+    int width;
+    int height;
+    
     void initSize(int width, int height) override {
-        NSLog(@"initSize(int width, int height) override");
+        width = width;
+        height = height;
+        NSLog(@"width: %d, height: %d",width,height);
     }
     
     void repaint(AVFrame *frame) override {
+        [playerView displayYUVI420Data:frame->data[0] width:width height:height];
         NSLog(@"repaint(AVFrame *frame) override");
     }
 };
