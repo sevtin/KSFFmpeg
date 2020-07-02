@@ -62,7 +62,7 @@
 		E6137F0E24AD75CE004E7033 /* KSVideoThread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSVideoThread.cpp; sourceTree = "<group>"; };
 		E6137F0F24AD75CE004E7033 /* KSVideoThread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSVideoThread.hpp; sourceTree = "<group>"; };
 		E6137F1124AD75F4004E7033 /* KSResample.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KSResample.cpp; sourceTree = "<group>"; };
-		E6137F1224AD75F4004E7033 /* KSResample.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KSResample.hpp; sourceTree = "<group>"; };
+		E6137F1224AD75F4004E7033 /* KSResample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KSResample.h; sourceTree = "<group>"; };
 		E6299DE424AD727D00256E84 /* KSPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KSPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6299DE724AD727D00256E84 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E6299DE824AD727D00256E84 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -131,14 +131,14 @@
 			isa = PBXGroup;
 			children = (
 				E6137F1424AD7642004E7033 /* Threads */,
-				E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */,
 				E6137F0024AD7541004E7033 /* KSAudioPlay.h */,
+				E6137EFF24AD7541004E7033 /* KSAudioPlay.cpp */,
 				E6137F0624AD757E004E7033 /* KSDecode.h */,
 				E6137F0524AD757E004E7033 /* KSDecode.cpp */,
 				E6137F0824AD7598004E7033 /* KSDemux.cpp */,
 				E6137F0924AD7598004E7033 /* KSDemux.hpp */,
+				E6137F1224AD75F4004E7033 /* KSResample.h */,
 				E6137F1124AD75F4004E7033 /* KSResample.cpp */,
-				E6137F1224AD75F4004E7033 /* KSResample.hpp */,
 			);
 			path = KSPlayer;
 			sourceTree = "<group>";
