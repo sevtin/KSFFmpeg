@@ -17,6 +17,7 @@ static double r2d(AVRational r) {
     return r.den == 0 ? 0 : (double)r.num / (double)r.den;
 }
 
+//打开媒体文件，或者流媒体 rtmp http rstp
 bool KSDemux::open(const char *url) {
     if (!url) {
         return false;
@@ -66,6 +67,7 @@ bool KSDemux::open(const char *url) {
     return true;
 }
 
+//清空读取缓存
 void KSDemux::clear() {
     mux.lock();
     if (!fmt_ctx) {
@@ -87,6 +89,7 @@ void KSDemux::close() {
     mux.unlock();
 }
 
+//空间需要调用者释放 ，释放AVPacket对象空间，和数据空间 av_packet_free
 AVPacket* KSDemux::read() {
     mux.lock();
     
@@ -130,14 +133,17 @@ AVCodecParameters* KSDemux::copyStreamPar(int index) {
     return par;
 }
 
+//获取视频参数  返回的空间需要清理  avcodec_parameters_free
 AVCodecParameters* KSDemux::copyVideoPar() {
     return copyStreamPar(video_index);
 }
 
+//获取音频参数  返回的空间需要清理 avcodec_parameters_free
 AVCodecParameters* KSDemux::copyAudioPar() {
     return copyStreamPar(audio_index);
 }
 
+//seek 位置 pos 0.0 ~1.0
 bool KSDemux::seek(double pos){
     mux.lock();
     if (!fmt_ctx) {
